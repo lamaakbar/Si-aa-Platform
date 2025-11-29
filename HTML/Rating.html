@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reviews & Ratings</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+
+<style>
+    body {
+    margin: 0;
+      font-family: 'Baloo Bhaijaan 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f8f9fb;
+    color: #333;
+    }
+
+    /* ---------------- HEADER ---------------- */
+    .header {
+      padding: 20px 0;
+      background-color: #fff;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .header-content {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row-reverse; /* <-- flips logo to the RIGHT */
+    }
+
+    .logo-img {
+      height: 50px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav a {
+      color: #4a5568;
+      text-decoration: none;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .nav a:hover {
+      color: #1a365d;
+    }
+
+    /* ---------------- PAGE CONTAINER ---------------- */
+    .page-section {
+      width: 90%;
+      max-width: 900px;
+      margin: 50px auto;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: bold;
+      color: #1a365d;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    /* ---------------- FORM SECTION ---------------- */
+    .review-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+      margin-bottom: 40px;
+    }
+
+    label {
+      font-weight: 600;
+      margin: 15px 0 8px;
+      display: block;
+      color: #1a365d;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #f9fafb;
+      transition: 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #1a365d;
+      outline: none;
+      background-color: #fff;
+    }
+
+    /* BUTTON */
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: #ff7a00;
+      color:#fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #e06800;
+    }
+
+    /* ---------------- REVIEW CARDS ---------------- */
+    .review-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+      border-left: 5px solid #ff7a00;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .review-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #1a365d;
+    }
+
+    .stars {
+      font-size: 18px;
+      color: #ff7a00;
+      font-weight: bold;
+    }
+
+    .review-text {
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .stars-container {
+  display: flex;
+  gap: 10px;
+  font-size: 30px;
+  cursor: pointer;
+  color: #d1d5db;
+}
+
+.star.selected,
+.star:hover,
+.star.hovered {
+  color: #ff7a00;
+}
+
+.rating-text {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #1a365d;
+  font-weight: 600;
+}
+
+  </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-content">
+    <img src="../Media/Logo.png" alt="Si'aa Logo" class="logo-img">
+
+    <nav class="nav">
+        <a href="#">About</a>
+        <a href="#">Features</a>
+        <a href="#">How It Works</a>
+    </nav>
+    </div>
+</header>
+
+
+<!-- Write Review Section -->
+<div class="page-section">
+    <h2 class="section-title">Share Your Experience</h2>
+
+    <div class="review-box">
+
+    <!-- Name is auto-filled from data -->
+    <input id="name" type="hidden">
+
+    <label>Rating</label>
+
+<div class="stars-container">
+<span class="star" data-value="1">★</span>
+<span class="star" data-value="2">★</span>
+<span class="star" data-value="3">★</span>
+<span class="star" data-value="4">★</span>
+<span class="star" data-value="5">★</span>
+</div>
+
+<p id="rating-text" class="rating-text">Select Rating</p>
+
+<input type="hidden" id="rating" value="0">
+
+
+    <label>Your Review</label>
+    <textarea id="review" rows="4" placeholder="Write your review..."></textarea>
+
+    <button onclick="addReview()">Submit Review</button>
+    </div>
+
+    <!-- Display Reviews -->
+    <h2 class="section-title">What People Say</h2>
+    <div id="reviews-list"></div>
+</div>
+
+<script>
+
+    /** --------------------------------------------------------
+     * AUTO-FILL USER NAME (simulate fetching from database)
+     * Replace this with your actual Firebase/Auth data later
+     * -------------------------------------------------------- */
+    const loggedInUserName = "Ahmad Al-Qahtani"; 
+    document.getElementById("name").value = loggedInUserName;
+
+    /* ---------------- ADD REVIEW FUNCTION ---------------- */
+    function addReview() {
+    let name = document.getElementById("name").value.trim();
+    let rating = document.getElementById("rating").value;
+    let review = document.getElementById("review").value.trim();
+
+    if (!review) {
+        alert("Please write your review.");
+        return;
+    }
+
+    let stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+
+    let card = `
+        <div class="review-card">
+        <div class="review-header">
+            <span class="review-name">${name}</span>
+            <span class="stars">${stars}</span>
+        </div>
+        <p class="review-text">${review}</p>
+        </div>
+    `;
+
+    document.getElementById("reviews-list").innerHTML += card;
+
+    document.getElementById("rating").value = "5";
+    document.getElementById("review").value = "";
+    }
+    const stars = document.querySelectorAll(".star");
+const ratingInput = document.getElementById("rating");
+const ratingText = document.getElementById("rating-text");
+
+const ratingLabels = {
+1: "Very Bad",
+2: "Poor",
+3: "Average",
+4: "Good",
+5: "Excellent"
+};
+
+// Hover effect
+stars.forEach(star => {
+star.addEventListener("mouseenter", () => {
+    const value = star.getAttribute("data-value");
+
+    stars.forEach(s => {
+    s.classList.toggle("hovered", s.getAttribute("data-value") <= value);
+    });
+
+    ratingText.innerText = ratingLabels[value];
+});
+
+star.addEventListener("mouseleave", () => {
+    stars.forEach(s => s.classList.remove("hovered"));
+
+    if (ratingInput.value == 0) {
+    ratingText.innerText = "Select Rating";
+    } else {
+    ratingText.innerText = ratingLabels[ratingInput.value];
+    }
+});
+
+  // Click (set rating)
+star.addEventListener("click", () => {
+    const value = star.getAttribute("data-value");
+    ratingInput.value = value;
+
+    stars.forEach(s => {
+    s.classList.toggle("selected", s.getAttribute("data-value") <= value);
+    });
+
+    ratingText.innerText = ratingLabels[value];
+});
+});
+
+</script>
+
+</body>
+</html>
+
+
+
