@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Si'aa - Find Storage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/styles.css">
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <nav class="nav">
+                <a href="index.html#about">About</a>
+                <a href="index.html#features">Features</a>
+                <a href="index.html#how-it-works">How It Works</a>
+            </nav>
+            <div class="logo">
+                <img src="../Media/Logo.png" alt="Si'aa Logo" class="logo-img">
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- STORAGE SEARCH -->
+<section class="storage-search">
+    <div class="container">
+        <h1 class="storage-search__title">Find the Right Storage Space</h1>
+        <p class="storage-search__subtitle">Set your location, budget, and duration to get AI-recommended storage spaces.</p>
+
+        <div class="storage-search__layout">
+
+            <!-- LEFT SIDE: Filter Form -->
+            <div class="storage-search__form-area">
+                <div class="filter-card">
+
+                    <h2 class="filter-card__title">Search Filters</h2>
+
+                    <form class="filter-form" action="#" method="get">
+
+                        <!-- FILTER FIELDS GRID -->
+                        <div class="filter-grid">
+
+                            <!-- Location -->
+                            <div class="filter-field">
+                                <span class="filter-field__label">Enter Location</span>
+                                <select name="location_neighborhood" class="filter-select-input" required>
+                                    <option value="">neighborhood</option>
+                                    <option value="al-salama">Al-Salama</option>
+                                    <option value="al-rawdah">Al-Rawdah</option>
+                                    <option value="al-nahda">Al-Nahda</option>
+                                    <option value="al-andalus">Al-Andalus</option>
+                                    <option value="al-hamra">Al-Hamra</option>
+                                    <option value="al-rehab">Al-Rehab</option>
+                                    <option value="al-faisaliyah">Al-Faisaliyah</option>
+                                    <option value="al-naeem">Al-Naeem</option>
+                                    <option value="al-basateen">Al-Basateen</option>
+                                    <option value="al-shati">Al-Shati (Corniche)</option>
+                                    <option value="al-safa">Al-Safa</option>
+                                    <option value="al-aziziyah">Al-Aziziyah</option>
+                                    <option value="al-baghdadiyah">Al-Baghdadiyah</option>
+                                    <option value="al-balad">Al-Balad</option>
+                                </select>
+                            </div>
+
+                            <!-- Storage Size -->
+                            <div class="filter-field">
+                                <span class="filter-field__label">Choose Size</span>
+                                <select name="storage_size" class="filter-select-input">
+                                    <option value="select">Size</option>
+                                    <option value="small">Small (1–3 m²)</option>
+                                    <option value="medium">Medium (4–7 m²)</option>
+                                    <option value="large">Large (8–12 m²)</option>
+                                    <option value="xl">Extra Large (&gt;12 m²)</option>
+                                </select>
+                            </div>
+
+                            <!-- Price Range -->
+                            <div class="filter-field filter-field--range">
+                                <div class="filter-field__range-header">
+                                    <span class="filter-field__label">Price Range</span>
+                                    <span class="filter-field__range-values">
+                                        <span>80 SAR</span><span>5000 SAR</span>
+                                    </span>
+                                </div>
+                                <input type="range" name="price_max" min="80" max="5000" value="1200" class="filter-range-input">
+                            </div>
+
+                            <!-- Rental Date -->
+                            <div class="filter-field filter-field--date">
+                                <span class="filter-field__label">Choose Date</span>
+                                <input type="date" name="rental_date" class="filter-text-input">
+                            </div>
+
+
+                            <!-- Items Type -->
+                            <div class="filter-field">
+                                <span class="filter-field__label">Items Type</span>
+                                <select name="items_type" class="filter-select-input">
+                                    <option value="select">Items</option>
+                                    <option value="boxes-only">Boxes / luggage only</option>
+                                    <option value="furniture">Furniture + boxes</option>
+                                    <option value="vehicle">Vehicle / large items</option>
+                                </select>
+                            </div>
+
+                            <!-- Rental Duration -->
+                            <div class="filter-field">
+                                <span class="filter-field__label">Choose Rental Duration</span>
+                                <select name="rental_duration" class="filter-select-input">
+                                    <option value="select">Duration</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- ENVIRONMENT OPTIONS -->
+                        <div class="environment-options">
+                            <label class="environment-option">
+                                <input type="checkbox" name="environment[]" value="temperature">
+                                <span>Temperature-controlled</span>
+                            </label>
+                            <label class="environment-option">
+                                <input type="checkbox" name="environment[]" value="climate">
+                                <span>Climate-controlled</span>
+                            </label>
+                            <label class="environment-option">
+                                <input type="checkbox" name="environment[]" value="humidity">
+                                <span>Humidity-controlled</span>
+                            </label>
+                            <label class="environment-option">
+                                <input type="checkbox" name="environment[]" value="dry">
+                                <span>Dry</span>
+                            </label>
+                            <label class="environment-option">
+                                <input type="checkbox" name="environment[]" value="secure">
+                                <span>Secure</span>
+                            </label>
+                        </div>
+
+                        <!-- AI Recommendation Info -->
+                        <div class="ai-info-box">
+                            <p class="ai-info-box__title">AI Recommendation</p>
+                            <p class="ai-info-box__text">
+                                Si'aa analyzes your filters to generate <strong>AI-based storage recommendations</strong>.
+                            </p>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark btn-large filter-submit-btn">
+                            Search & Get Recommendations
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: RESULTS -->
+            <aside class="storage-results">
+                <div class="storage-results__header">
+                    <h2 class="storage-results__title">Results</h2>
+
+                    <div class="sorting-control">
+                        <label for="sortBy" class="sorting-control__label">Sort by</label>
+                        <select name="sortBy" id="sortBy" class="sorting-control__select">
+                            <option value="match">Match Score (Highest)</option>
+                            <option value="priceLow">Price (Lowest first)</option>
+                            <option value="priceHigh">Price (Highest first)</option>
+                            <option value="distance">Distance (Closest)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="storage-results__list">
+
+                    <!-- Example card -->
+                    <article class="storage-card">
+                        <div class="storage-card__image"></div>
+
+                        <div class="storage-card__content">
+                            <div class="storage-card__header">
+                                <h3 class="storage-card__title">Indoor Storage Room · Al-Salama</h3>
+                                <span class="storage-card__match">92% Match</span>
+                            </div>
+
+                            <p class="storage-card__meta">4–6 m² · Indoor · Climate-controlled</p>
+                            <p class="storage-card__description">
+                                Ideal for boxes, luggage, and small furniture. Secure building with daytime access.
+                            </p>
+
+                            <div class="storage-card__footer">
+                                <div class="storage-card__price">
+                                    <span class="storage-card__price-value">180 SAR</span>
+                                    <span class="storage-card__price-unit">/ month</span>
+                                </div>
+
+                                <a href="booking.html" class="btn btn-outline btn-small">Book This Space</a>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="#"><img src="../Media/facebook.png"></a>
+                <a href="#"><img src="../Media/linkedin.png"></a>
+                <a href="#"><img src="../Media/youtube.png"></a>
+                <a href="#"><img src="../Media/instagram.png"></a>
+            </div>
+            <div class="footer-logo">
+                <img src="../Media/Logo.png" class="footer-logo-img" alt="">
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
