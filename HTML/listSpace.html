@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Si'aa - List a Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <nav class="nav">
+                    <a href="index.html#about">About</a>
+                    <a href="index.html#features">Features</a>
+                    <a href="index.html#how-it-works">How It Works</a>
+                </nav>
+                <div class="logo">
+                    <img src="../Media/Logo.png" alt="Si'aa Logo" class="logo-img">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Listing Section -->
+    <section class="listing-section">
+        <div class="container">
+            <div class="listing-header">
+                <h1 class="listing-title">List a New Storage Space</h1>
+                <p class="listing-subtitle">
+                    Add your space in a few guided steps. We’ll help you set details,
+                    environment, access, and publish your listing.
+                </p>
+            </div>
+
+            <div class="listing-layout">
+                <div class="steps-card">
+                    <div class="steps-row">
+                        <div class="step-pill is-active" data-step="1">
+                            <span class="step-number">1</span>
+                            <span class="step-label">Basic Details</span>
+                        </div>
+                        <div class="step-pill" data-step="2">
+                            <span class="step-number">2</span>
+                            <span class="step-label">Environment & Photos</span>
+                        </div>
+                        <div class="step-pill" data-step="3">
+                            <span class="step-number">3</span>
+                            <span class="step-label">Access & Pricing</span>
+                        </div>
+                        <div class="step-pill" data-step="4">
+                            <span class="step-number">4</span>
+                            <span class="step-label">Review & Publish</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main card -->
+                <div class="listing-card">
+                    <form id="listingForm" class="listing-form" novalidate>
+                        <!-- STEP 1: Basic details -->
+                        <div class="step-panel is-active" data-step="1">
+                            <h2 class="step-title">Basic space details</h2>
+                            <p class="step-description">
+                                Tell guests what type of space you’re offering and where it is.
+                            </p>
+
+                            <!-- title + neighborhood -->
+                            <div class="step-row">
+                                <div class="form-group">
+                                    <label for="listingTitle" class="form-label">Listing title *</label>
+                                    <input
+                                        id="listingTitle"
+                                        name="listingTitle"
+                                        type="text"
+                                        class="form-input"
+                                        placeholder="e.g., Indoor storage room in Al-Salama"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="listingNeighborhood" class="form-label">Neighborhood (Jeddah) *</label>
+                                    <select
+                                        id="listingNeighborhood"
+                                        name="listingNeighborhood"
+                                        class="form-input"
+                                        required
+                                    >
+                                        <option value="">Select neighborhood</option>
+                                        <option value="al-salama">Al-Salama</option>
+                                        <option value="al-rawdah">Al-Rawdah</option>
+                                        <option value="al-nahda">Al-Nahda</option>
+                                        <option value="al-andalus">Al-Andalus</option>
+                                        <option value="al-hamra">Al-Hamra</option>
+                                        <option value="al-rehab">Al-Rehab</option>
+                                        <option value="al-faisaliyah">Al-Faisaliyah</option>
+                                        <option value="al-naeem">Al-Naeem</option>
+                                        <option value="al-basateen">Al-Basateen</option>
+                                        <option value="al-shati">Al-Shati (Corniche)</option>
+                                        <option value="al-safa">Al-Safa</option>
+                                        <option value="al-aziziyah">Al-Aziziyah</option>
+                                        <option value="al-baghdadiyah">Al-Baghdadiyah</option>
+                                        <option value="al-balad">Al-Balad</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- type + size -->
+                            <div class="step-row">
+                                <div class="form-group">
+                                    <label for="listingType" class="form-label">Space type *</label>
+                                    <select
+                                        id="listingType"
+                                        name="listingType"
+                                        class="form-input"
+                                        required
+                                    >
+                                        <option value="">Choose type</option>
+                                        <option value="room">Indoor room</option>
+                                        <option value="garage">Garage / parking</option>
+                                        <option value="warehouse">Warehouse corner</option>
+                                        <option value="outdoor">Outdoor covered area</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="listingSize" class="form-label">Approximate size (m²) *</label>
+                                    <input
+                                        id="listingSize"
+                                        name="listingSize"
+                                        type="number"
+                                        min="1"
+                                        class="form-input"
+                                        placeholder="e.g., 6"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- description -->
+                            <div class="form-group">
+                                <label for="listingDescription" class="form-label">Description *</label>
+                                <textarea
+                                    id="listingDescription"
+                                    name="listingDescription"
+                                    class="form-input"
+                                    rows="3"
+                                    placeholder="Describe what can be stored, building type, etc."
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div class="step-actions">
+                                <button
+                                    type="button"
+                                    class="btn btn-dark next-btn"
+                                    data-next="2"
+                                    onclick="ValidateStepOne()"
+                                >
+                                    Next: Environment & Photos
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: Environment & photos -->
+                        <div class="step-panel" data-step="2">
+                            <h2 class="step-title">Environment & photos</h2>
+                            <p class="step-description">
+                                Set environmental conditions and upload photos of your space.
+                            </p>
+
+                            <div class="form-group">
+                                <span class="form-label">Environmental conditions (choose all that apply)</span>
+                                <div class="chip-row">
+                                    <label class="chip-option">
+                                        <input type="checkbox" name="conditions[]" value="temperature">
+                                        <span>Temperature-controlled</span>
+                                    </label>
+                                    <label class="chip-option">
+                                        <input type="checkbox" name="conditions[]" value="climate">
+                                        <span>Climate-controlled</span>
+                                    </label>
+                                    <label class="chip-option">
+                                        <input type="checkbox" name="conditions[]" value="humidity">
+                                        <span>Humidity-controlled</span>
+                                    </label>
+                                    <label class="chip-option">
+                                        <input type="checkbox" name="conditions[]" value="dry">
+                                        <span>Dry</span>
+                                    </label>
+                                    <label class="chip-option">
+                                        <input type="checkbox" name="conditions[]" value="secure">
+                                        <span>Extra secure</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="listingPhotos" class="form-label">Upload photos *</label>
+                                <input
+                                    id="listingPhotos"
+                                    name="listingPhotos"
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    class="form-input"
+                                    required
+                                >
+                                <p class="step-note">
+                                    Add at least three clear photos of the space (you can add more later).
+                                </p>
+                            </div>
+
+                            <div class="step-actions step-actions--split">
+                                <button
+                                    type="button"
+                                    class="btn btn-outline prev-btn"
+                                    data-prev="1"
+                                    onclick="goToStep(1)"
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-dark next-btn"
+                                    data-next="3"
+                                    onclick="ValidateStepTwo()"
+                                >
+                                    Next: Access & Pricing
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: Access & pricing -->
+                        <div class="step-panel" data-step="3">
+                            <h2 class="step-title">Access & pricing</h2>
+                            <p class="step-description">
+                                Define how and when renters can access the space and set your price.
+                            </p>
+
+                            <div class="form-group">
+                                <span class="form-label">Access type *</span>
+                                <div class="chip-row">
+                                    <label class="chip-option">
+                                        <input type="radio" name="accessType" value="24-7" required>
+                                        <span>24/7 access</span>
+                                    </label>
+                                    <label class="chip-option">
+                                        <input type="radio" name="accessType" value="daytime">
+                                        <span>Daytime only</span>
+                                    </label>
+                                    <label class="chip-option">
+                                        <input type="radio" name="accessType" value="scheduled">
+                                        <span>By appointment</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="step-row">
+                                <div class="form-group">
+                                    <label for="listingPrice" class="form-label">Price per month (SAR) *</label>
+                                    <input
+                                        id="listingPrice"
+                                        name="listingPrice"
+                                        type="text"
+                                        class="form-input"
+                                        placeholder="e.g., 250"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="rentalDuration" class="form-label">Rental duration *</label>
+                                    <select
+                                        id="rentalDuration"
+                                        name="rentalDuration"
+                                        class="form-input"
+                                        required
+                                    >
+                                        <option value="">Duration</option>
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="accessNotes" class="form-label">Access notes (optional)</label>
+                                <textarea
+                                    id="accessNotes"
+                                    name="accessNotes"
+                                    class="form-input"
+                                    rows="2"
+                                    placeholder="e.g., Access via security gate, key will be provided…"
+                                ></textarea>
+                            </div>
+
+                            <div class="step-actions step-actions--split">
+                                <button
+                                    type="button"
+                                    class="btn btn-outline prev-btn"
+                                    data-prev="2"
+                                    onclick="goToStep(2)"
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-dark next-btn"
+                                    data-next="4"
+                                    onclick="ValidateStepThree()"
+
+                                >
+                                    Next: Review & Publish
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 4: Review & publish -->
+                        <div class="step-panel" data-step="4">
+                            <h2 class="step-title">Review & publish</h2>
+                            <p class="step-description">
+                                Check your information before publishing your listing.
+                            </p>
+
+                            <div class="summary-box" id="listingSummaryBox">
+                                <p class="step-note">
+                                    When you click “List space”, your listing will be submitted and
+                                    shown to renters searching in your neighborhood.
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <span class="form-label">Initial listing status *</span>
+                                <div class="chip-row">
+                                    <label class="chip-option">
+                                        <input type="radio" name="listingStatus" value="active" required>
+                                        <span>Active (visible to renters)</span>
+                                    </label>
+                                    <label class="chip-option">
+                                        <input type="radio" name="listingStatus" value="draft">
+                                        <span>Draft (save but don’t show yet)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="step-actions step-actions--split">
+                                <button
+                                    type="button"
+                                    class="btn btn-outline prev-btn"
+                                    data-prev="3"
+                                    onclick="goToStep(3)"
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    type="submit"
+                                    class="btn btn-dark"
+                                >
+                                    List Space
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Confirmation message -->
+                        <div class="listing-confirmation" id="listingConfirmation">
+                            <h3>Your space has been listed 🎉</h3>
+                            <p>
+                                We’ve saved your listing. You can edit details or upload more photos
+                                later from your dashboard.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <img src="../Media/facebook.png" alt="Facebook">
+                    </a>
+                    <a href="#" aria-label="LinkedIn">
+                        <img src="../Media/linkedin.png" alt="LinkedIn">
+                    </a>
+                    <a href="#" aria-label="YouTube">
+                        <img src="../Media/youtube.png" alt="YouTube">
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <img src="../Media/instagram.png" alt="Instagram">
+                    </a>
+                </div>
+                <div class="footer-logo">
+                    <img src="../Media/Logo.png" alt="Si'aa Logo" class="footer-logo-img">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    const stepPanels = Array.from(document.querySelectorAll('.step-panel'));
+    const stepPills = Array.from(document.querySelectorAll('.step-pill'));
+    const form = document.getElementById('listingForm');
+    const confirmationBox = document.getElementById('listingConfirmation');
+
+    function goToStep(stepNumber) {
+        stepPanels.forEach(panel => {
+            panel.classList.toggle('is-active', Number(panel.dataset.step) === stepNumber);
+        });
+
+        stepPills.forEach(pill => {
+            const n = Number(pill.dataset.step);
+            pill.classList.toggle('is-active', n === stepNumber);
+            pill.classList.toggle('is-completed', n < stepNumber);
+        });
+
+        if (confirmationBox) confirmationBox.style.display = 'none';
+    }
+
+    function showError(container, msg) {
+        clearError(container);
+        const p = document.createElement("p");
+        p.classList.add("error-msg");
+        p.textContent = msg;
+        container.appendChild(p);
+    }
+
+    function clearError(container) {
+        if (!container) return;
+        const msg = container.querySelector(".error-msg");
+        if (msg) msg.remove();
+    }
+
+    // STEP 1
+    function ValidateStepOne() {
+        const title = document.getElementById('listingTitle');
+        const neighborhood = document.getElementById('listingNeighborhood');
+        const type = document.getElementById('listingType');
+        const size = document.getElementById('listingSize');
+        const desc = document.getElementById('listingDescription');
+
+        const titleGroup = title.parentElement;
+        const neighborhoodGroup = neighborhood.parentElement;
+        const typeGroup = type.parentElement;
+        const sizeGroup = size.parentElement;
+        const descGroup = desc.parentElement;
+
+        [titleGroup, neighborhoodGroup, typeGroup, sizeGroup, descGroup].forEach(clearError);
+
+        if (!title.value.trim()) {
+            showError(titleGroup, "Please add a title.");
+            return false;
+        }
+        if (!neighborhood.value) {
+            showError(neighborhoodGroup, "Select the neighborhood.");
+            return false;
+        }
+        if (!type.value) {
+            showError(typeGroup, "Choose the space type.");
+            return false;
+        }
+        if (!size.value || Number(size.value) <= 0) {
+            showError(sizeGroup, "Enter a valid size in m².");
+            return false;
+        }
+        if (desc.value.trim().length < 10) {
+            showError(descGroup, "Description must be at least 10 characters.");
+            return false;
+        }
+
+        goToStep(2);
+        return true;
+    }
+
+    // STEP 2
+    function ValidateStepTwo() {
+        const photosInput = document.getElementById('listingPhotos');
+        const photosGroup = photosInput.parentElement;
+
+        clearError(photosGroup);
+
+        if (!photosInput.files || photosInput.files.length < 3) {
+            showError(photosGroup, "Please upload at least 3 photos of your space.");
+            return false;
+        }
+
+        goToStep(3);
+        return true;
+    }
+
+    // STEP 3 
+    function ValidateStepThree() {
+        const accessRadios = document.querySelectorAll('input[name="accessType"]');
+        const price = document.getElementById('listingPrice');
+        const duration = document.getElementById('rentalDuration');
+
+        const priceGroup = price.parentElement;
+        const durationGroup = duration.parentElement;
+        let accessGroup = null;
+
+        if (accessRadios.length > 0) {
+            accessGroup = accessRadios[0].closest('.form-group') || accessRadios[0].parentElement;
+        }
+
+        [priceGroup, durationGroup, accessGroup].forEach(clearError);
+
+        const accessSelected = document.querySelector('input[name="accessType"]:checked');
+
+        if (!accessSelected) {
+            showError(accessGroup, "Choose how people can access the space.");
+            return false;
+        }
+
+        const priceValue = price.value.trim();
+
+        if (!priceValue || isNaN(priceValue) || Number(priceValue) <= 0) {
+            showError(priceGroup, "Enter a valid price in SAR.");
+            return false;
+        }
+
+        if (!duration.value) {
+            showError(durationGroup, "Select a rental duration.");
+            return false;
+        }
+
+        goToStep(4);
+        return true;
+    }
+
+    // STEP 4
+    function ValidateStepFour() {
+        const statusSelected = document.querySelector('input[name="listingStatus"]:checked');
+        const firstStatus = document.querySelector('input[name="listingStatus"]');
+        let statusGroup = null;
+
+        if (firstStatus) {
+            statusGroup = firstStatus.closest('.form-group') || firstStatus.parentElement;
+        }
+
+        clearError(statusGroup);
+
+        if (!statusSelected) {
+            showError(statusGroup, "Choose listing status (Active or Draft).");
+            return false;
+        }
+
+        return true;
+    }
+
+    // SUBMIT
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (!ValidateStepFour()) return;
+
+        if (confirmationBox) {
+            confirmationBox.style.display = 'block';
+        }
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        console.log("Listing is valid and ready to be sent.");
+    });
+</script>
+
+
+</body>
+</html>
