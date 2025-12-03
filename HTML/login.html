@@ -101,5 +101,81 @@
             </div>
         </div>
     </footer>
+    <script>
+  function showError(input, msg) {
+    const group = input.closest(".form-group");
+    if (!group) return;
+
+    clearError(input);
+
+    const p = document.createElement("p");
+    p.classList.add("error-msg");
+    p.textContent = msg;
+    group.appendChild(p);
+  }
+
+  function clearError(input) {
+    const group = input.closest(".form-group");
+    if (!group) return;
+
+    const msg = group.querySelector(".error-msg");
+    if (msg) msg.remove();
+  }
+
+  function isEmail(input) {
+    clearError(input);
+    const value = input.value.trim();
+    const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!value) {
+      showError(input, "Email is required.");
+      return false;
+    }
+
+    if (!pattern.test(value)) {
+      showError(input, "Please enter a valid email address.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function isPassword(input) {
+    clearError(input);
+    const value = input.value.trim();
+
+    if (!value) {
+      showError(input, "Password is required.");
+      return false;
+    }
+
+    if (value.length < 8) {
+      showError(input, "Password must be at least 8 characters.");
+      return false;
+    }
+
+    return true;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector(".auth-form");
+    if (!form) return;
+
+    const emailInput = document.getElementById("loginEmail");
+    const passwordInput = document.getElementById("loginPassword");
+
+    form.addEventListener("submit", function (e) {
+      let isValid = true;
+
+      if (!isEmail(emailInput)) isValid = false;
+      if (!isPassword(passwordInput)) isValid = false;
+
+      if (!isValid) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
