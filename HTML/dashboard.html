@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Si'aa - dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <nav class="nav">
+                <a href="index.html#about">About</a>
+                <a href="index.html#features">Features</a>
+                <a href="index.html#how-it-works">How It Works</a>
+            </nav>
+            <div class="logo">
+                <img src="../Media/Logo.png" alt="Si'aa Logo" class="logo-img">
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sideBar">
+        <a href="#" class="sideBar-link is-active" data-section="profileSection"><i class="fa-solid fa-user"></i> Profile</a>
+        <a href="#" class="sideBar-link" data-section="historySection"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+    </aside>
+
+    <!-- Main content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="dashboard-title-box">
+                    <h1 class="dashboard-title">
+                        Welcome back, <span id="userNameDisplay">User</span>
+                    </h1>
+                </div>
+                <button id="actionButton" class="dashboard-btn">
+                </button>
+            </div>
+
+            <!-- Profile Section -->
+            <section id="profileSection" class="dashboard-section is-active">
+                <h2 class="section-title">Profile</h2>
+
+                <form id="profileForm" class="profile-form">
+                    <div class="profile-grid">
+                        <div class="form-group">
+                            <label for="profileName">Full Name</label>
+                            <input type="text" id="profileName" class="form-input" value="User Name" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" class="form-input" value="user@example.com" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePhone">Phone Number</label>
+                            <input type="tel" id="profilePhone" class="form-input" value="+966" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileRole">Account Type</label>
+                            <input type="text" id="profileRole" class="form-input" disabled>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <button type="button" id="editProfileBtn" class="secondary-btn">Edit</button>
+                        <button type="submit" id="saveProfileBtn" class="primary-btn" disabled>Save</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- History Section -->
+            <section id="historySection" class="dashboard-section">
+                <h2 class="section-title" id="historyTitle">History</h2>
+
+                <div id="historyEmptyMessage" class="history-empty" style="display:none;">
+                    No items yet. Use the button above to get started.
+                </div>
+
+                <ul id="historyList" class="history-list">
+                </ul>
+            </section>
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><img src="../Media/facebook.png" alt="Facebook"></a>
+                <a href="#" aria-label="LinkedIn"><img src="../Media/linkedin.png" alt="LinkedIn"></a>
+                <a href="#" aria-label="YouTube"><img src="../Media/youtube.png" alt="YouTube"></a>
+                <a href="#" aria-label="Instagram"><img src="../Media/instagram.png" alt="Instagram"></a>
+            </div>
+            <div class="footer-logo">
+                <img src="../Media/Logo.png" alt="Si'aa Logo" class="footer-logo-img">
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="../Javascript/dashboard.js"></script>
+
+</body>
+</html>
