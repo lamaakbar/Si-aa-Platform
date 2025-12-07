@@ -19,7 +19,7 @@ This platform now includes **AI Matching** using the `sentence-transformers/all-
    ```
    The server will run on `http://localhost:5000`
 
-3. **Initialize Sample Data** (Optional)
+3. **Initialize Sample Data** (mock data)
    ```bash
    python init_sample_data.py
    ```
