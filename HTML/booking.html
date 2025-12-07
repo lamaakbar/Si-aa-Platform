@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Si'aa - Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/styles.css">
+</head>
+<body>
+
+<!-- Header (same pattern as search / list / login) -->
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <nav class="nav">
+                <a href="index.html#about">About</a>
+                <a href="index.html#features">Features</a>
+                <a href="index.html#how-it-works">How It Works</a>
+            </nav>
+            <div class="logo">
+                <img src="../Media/Logo.png" alt="Si'aa Logo" class="logo-img">
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- BOOKING PAGE -->
+<section class="booking-section">
+    <div class="container">
+
+        <!-- Little breadcrumb to show flow Search → Booking -->
+        <p class="booking-breadcrumb">
+            Search &nbsp;›&nbsp; Space details &nbsp;›&nbsp; <span>Booking</span>
+        </p>
+
+        <div class="booking-layout">
+            <!-- LEFT: main info + logistics -->
+            <div class="booking-main-card">
+                <h1 class="booking-title">Complete Your Request</h1>
+
+                <!-- Space basic info -->
+                <div class="booking-space-header">
+                    <h2 id="bookingType" class="booking-space-type">Basement</h2>
+                    <p id="bookingAddress" class="booking-space-address">
+                        Al-nakheel, Abdullah Alkhayat St.
+                    </p>
+                    <p id="bookingDate" class="booking-space-date">
+                        25-10-2025
+                    </p>
+                </div>
+
+                <div class="booking-meta-grid">
+                    <div class="booking-meta-item">
+                        <span class="booking-meta-label">Rent</span>
+                        <span id="bookingPrice" class="booking-meta-value">80 SAR / week</span>
+                    </div>
+                    <div class="booking-meta-item">
+                        <span class="booking-meta-label">Distance</span>
+                        <span id="bookingDistance" class="booking-meta-value">1.8 km away</span>
+                    </div>
+                    <div class="booking-meta-item">
+                        <span class="booking-meta-label">Space</span>
+                        <span id="bookingSize" class="booking-meta-value">4 m²</span>
+                    </div>
+                </div>
+
+                <div id="bookingTags" class="booking-tags">
+                    <span class="booking-tag">Dry</span>
+                    <span class="booking-tag">Secure</span>
+                    <span class="booking-tag">Temperature-controlled</span>
+                </div>
+
+                <!-- Reviews snippet (same text as your Figma) -->
+                <div class="booking-section-block">
+                    <h3 class="booking-section-title">Reviews For This Space</h3>
+                    <p class="booking-review-line">
+                        <span class="booking-stars">★★★★★</span>
+                        <span id="bookingReview1" class="booking-review-text">
+                            “Very clean and secure, recommended!”
+                        </span>
+                    </p>
+                    <p class="booking-review-line secondary">
+                        <span class="booking-stars">★★★★★</span>
+                        <span id="bookingReview2" class="booking-review-text">
+                            “Great host, easy access, very helpful.”
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Owner table -->
+                <div class="booking-section-block">
+                    <h3 class="booking-section-title">Owner</h3>
+
+                    <div class="booking-owner-table">
+                        <div class="booking-owner-row booking-owner-header">
+                            <span>Name</span>
+                            <span>Phone</span>
+                            <span>Email</span>
+                        </div>
+                        <div class="booking-owner-row">
+                            <span id="ownerName">Omar Khalid</span>
+                            <span id="ownerPhone">0503394135</span>
+                            <span id="ownerEmail">Omar.K@email.com</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logistics options (matches Figma text) -->
+                <div class="booking-section-block">
+                    <h3 class="booking-section-title">Logistics</h3>
+                    <p class="booking-section-subtitle">
+                        Choose how you want your items moved.
+                    </p>
+
+                    <div class="booking-logistics-options">
+
+                        <!-- Self drop-off -->
+                        <label class="booking-logistics-option">
+                            <input type="radio" name="logisticsOption" value="self_dropoff" checked>
+                            <div class="booking-logistics-content">
+                                <div class="booking-logistics-title-row">
+                                    <span class="booking-logistics-title">Self-drop-off</span>
+                                </div>
+                                <p class="booking-logistics-description">
+                                    Bring your items directly to the storage location during access hours.
+                                </p>
+                            </div>
+                        </label>
+
+                        <!-- Si'aa partner pickup -->
+                        <label class="booking-logistics-option">
+                            <input type="radio" name="logisticsOption" value="partner_pickup">
+                            <div class="booking-logistics-content">
+                                <div class="booking-logistics-title-row">
+                                    <span class="booking-logistics-title">Si'aa-partner Pickup</span>
+                                </div>
+                                <ul class="booking-logistics-list">
+                                    <li>Door-to-door pickup</li>
+                                    <li>Scheduled delivery</li>
+                                    <li>Tracking included</li>
+                                </ul>
+                            </div>
+                        </label>
+
+                    </div>
+                </div>
+
+                <p id="bookingError" class="error-msg" style="display:none;"></p>
+
+                <div class="booking-actions">
+                    <button id="proceedToPaymentBtn"
+                            class="btn btn-dark btn-large booking-submit">
+                        Proceed to Payment
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT: Map & space mini summary (as in your Figma card) -->
+            <aside class="booking-side-card">
+                <h3 class="booking-side-title">Location</h3>
+<div id="bookingMap" class="booking-map">
+    <img
+        src="../Media/TempBookingMap.png.png"
+        alt="Storage location map"
+        class="booking-map-img"
+    />
+</div>
+
+
+                <div class="booking-side-summary">
+                    <div class="booking-side-row">
+                        <span class="booking-side-label">Space</span>
+                        <span id="sideSpaceType" class="booking-side-value">Basement · Jeddah</span>
+                    </div>
+                    <div class="booking-side-row">
+                        <span class="booking-side-label">Dates</span>
+                        <span id="sideDates" class="booking-side-value">25-10-2025 → 01-11-2025</span>
+                    </div>
+                    <div class="booking-side-row">
+                        <span class="booking-side-label">Estimated total</span>
+                        <span id="sideTotal" class="booking-side-total">240 SAR</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><img src="../Media/facebook.png" alt="Facebook"></a>
+                <a href="#" aria-label="LinkedIn"><img src="../Media/linkedin.png" alt="LinkedIn"></a>
+                <a href="#" aria-label="YouTube"><img src="../Media/youtube.png" alt="YouTube"></a>
+                <a href="#" aria-label="Instagram"><img src="../Media/instagram.png" alt="Instagram"></a>
+            </div>
+            <div class="footer-logo">
+                <img src="../Media/Logo.png" alt="Si'aa Logo" class="footer-logo-img">
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="../Javascript/booking.js"></script>
+</body>
+</html>
