@@ -1,0 +1,94 @@
+/* auth-alerts.css - Alert styling for login and register pages */
+
+/* Alert Container */
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+.alert i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Error Alert */
+.alert-error {
+    background: #ffebee;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+}
+
+.alert-error i {
+    color: #c62828;
+}
+
+/* Success Alert */
+.alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-left: 4px solid #2e7d32;
+}
+
+.alert-success i {
+    color: #2e7d32;
+}
+
+/* Animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Toggle Buttons Styling */
+.auth-toggle-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 4px;
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+.auth-toggle-btn {
+    flex: 1;
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Baloo Bhaijaan 2', cursive;
+}
+
+.auth-toggle-btn:hover {
+    color: #333;
+    background: rgba(155, 89, 182, 0.1);
+}
+
+.auth-toggle-btn.active {
+    background: #9b59b6;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
+}
+
+/* Loading State for Submit Button */
+.auth-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

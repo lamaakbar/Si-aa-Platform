@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Si'aa - List a Space</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../CSS/styles.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -73,24 +77,14 @@
                             <div class="step-row">
                                 <div class="form-group">
                                     <label for="listingTitle" class="form-label">Listing title *</label>
-                                    <input
-                                        id="listingTitle"
-                                        name="listingTitle"
-                                        type="text"
-                                        class="form-input"
-                                        placeholder="e.g., Indoor storage room in Al-Salama"
-                                        required
-                                    >
+                                    <input id="listingTitle" name="listingTitle" type="text" class="form-input"
+                                        placeholder="e.g., Indoor storage room in Al-Salama" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="listingNeighborhood" class="form-label">Neighborhood (Jeddah) *</label>
-                                    <select
-                                        id="listingNeighborhood"
-                                        name="listingNeighborhood"
-                                        class="form-input"
-                                        required
-                                    >
+                                    <select id="listingNeighborhood" name="listingNeighborhood" class="form-input"
+                                        required>
                                         <option value="">Select neighborhood</option>
                                         <option value="al-salama">Al-Salama</option>
                                         <option value="al-rawdah">Al-Rawdah</option>
@@ -114,12 +108,7 @@
                             <div class="step-row">
                                 <div class="form-group">
                                     <label for="listingType" class="form-label">Space type *</label>
-                                    <select
-                                        id="listingType"
-                                        name="listingType"
-                                        class="form-input"
-                                        required
-                                    >
+                                    <select id="listingType" name="listingType" class="form-input" required>
                                         <option value="">Choose type</option>
                                         <option value="room">Indoor room</option>
                                         <option value="garage">Garage / parking</option>
@@ -130,38 +119,21 @@
 
                                 <div class="form-group">
                                     <label for="listingSize" class="form-label">Approximate size (m²) *</label>
-                                    <input
-                                        id="listingSize"
-                                        name="listingSize"
-                                        type="number"
-                                        min="1"
-                                        class="form-input"
-                                        placeholder="e.g., 6"
-                                        required
-                                    >
+                                    <input id="listingSize" name="listingSize" type="number" min="1" class="form-input"
+                                        placeholder="e.g., 6" required>
                                 </div>
                             </div>
 
                             <!-- description -->
                             <div class="form-group">
                                 <label for="listingDescription" class="form-label">Description *</label>
-                                <textarea
-                                    id="listingDescription"
-                                    name="listingDescription"
-                                    class="form-input"
-                                    rows="3"
-                                    placeholder="Describe what can be stored, building type, etc."
-                                    required
-                                ></textarea>
+                                <textarea id="listingDescription" name="listingDescription" class="form-input" rows="3"
+                                    placeholder="Describe what can be stored, building type, etc." required></textarea>
                             </div>
 
                             <div class="step-actions">
-                                <button
-                                    type="button"
-                                    class="btn btn-dark next-btn"
-                                    data-next="2"
-                                    onclick="ValidateStepOne()"
-                                >
+                                <button type="button" class="btn btn-dark next-btn" data-next="2"
+                                    onclick="ValidateStepOne()">
                                     Next: Environment & Photos
                                 </button>
                             </div>
@@ -202,35 +174,20 @@
 
                             <div class="form-group">
                                 <label for="listingPhotos" class="form-label">Upload photos *</label>
-                                <input
-                                    id="listingPhotos"
-                                    name="listingPhotos"
-                                    type="file"
-                                    accept="image/*"
-                                    multiple
-                                    class="form-input"
-                                    required
-                                >
+                                <input id="listingPhotos" name="listingPhotos" type="file" accept="image/*" multiple
+                                    class="form-input" required>
                                 <p class="step-note">
                                     Add at least three clear photos of the space (you can add more later).
                                 </p>
                             </div>
 
                             <div class="step-actions step-actions--split">
-                                <button
-                                    type="button"
-                                    class="btn btn-outline prev-btn"
-                                    data-prev="1"
-                                    onclick="goToStep(1)"
-                                >
+                                <button type="button" class="btn btn-outline prev-btn" data-prev="1"
+                                    onclick="goToStep(1)">
                                     Back
                                 </button>
-                                <button
-                                    type="button"
-                                    class="btn btn-dark next-btn"
-                                    data-next="3"
-                                    onclick="ValidateStepTwo()"
-                                >
+                                <button type="button" class="btn btn-dark next-btn" data-next="3"
+                                    onclick="ValidateStepTwo()">
                                     Next: Access & Pricing
                                 </button>
                             </div>
@@ -264,24 +221,13 @@
                             <div class="step-row">
                                 <div class="form-group">
                                     <label for="listingPrice" class="form-label">Price per month (SAR) *</label>
-                                    <input
-                                        id="listingPrice"
-                                        name="listingPrice"
-                                        type="text"
-                                        class="form-input"
-                                        placeholder="e.g., 250"
-                                        required
-                                    >
+                                    <input id="listingPrice" name="listingPrice" type="text" class="form-input"
+                                        placeholder="e.g., 250" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="rentalDuration" class="form-label">Rental duration *</label>
-                                    <select
-                                        id="rentalDuration"
-                                        name="rentalDuration"
-                                        class="form-input"
-                                        required
-                                    >
+                                    <select id="rentalDuration" name="rentalDuration" class="form-input" required>
                                         <option value="">Duration</option>
                                         <option value="daily">Daily</option>
                                         <option value="weekly">Weekly</option>
@@ -292,31 +238,17 @@
 
                             <div class="form-group">
                                 <label for="accessNotes" class="form-label">Access notes (optional)</label>
-                                <textarea
-                                    id="accessNotes"
-                                    name="accessNotes"
-                                    class="form-input"
-                                    rows="2"
-                                    placeholder="e.g., Access via security gate, key will be provided…"
-                                ></textarea>
+                                <textarea id="accessNotes" name="accessNotes" class="form-input" rows="2"
+                                    placeholder="e.g., Access via security gate, key will be provided…"></textarea>
                             </div>
 
                             <div class="step-actions step-actions--split">
-                                <button
-                                    type="button"
-                                    class="btn btn-outline prev-btn"
-                                    data-prev="2"
-                                    onclick="goToStep(2)"
-                                >
+                                <button type="button" class="btn btn-outline prev-btn" data-prev="2"
+                                    onclick="goToStep(2)">
                                     Back
                                 </button>
-                                <button
-                                    type="button"
-                                    class="btn btn-dark next-btn"
-                                    data-next="4"
-                                    onclick="ValidateStepThree()"
-
-                                >
+                                <button type="button" class="btn btn-dark next-btn" data-next="4"
+                                    onclick="ValidateStepThree()">
                                     Next: Review & Publish
                                 </button>
                             </div>
@@ -351,18 +283,11 @@
                             </div>
 
                             <div class="step-actions step-actions--split">
-                                <button
-                                    type="button"
-                                    class="btn btn-outline prev-btn"
-                                    data-prev="3"
-                                    onclick="goToStep(3)"
-                                >
+                                <button type="button" class="btn btn-outline prev-btn" data-prev="3"
+                                    onclick="goToStep(3)">
                                     Back
                                 </button>
-                                <button
-                                    type="submit"
-                                    class="btn btn-dark"
-                                >
+                                <button type="submit" class="btn btn-dark">
                                     List Space
                                 </button>
                             </div>
@@ -387,18 +312,10 @@
         <div class="container">
             <div class="footer-content">
                 <div class="social-icons">
-                    <a href="#" aria-label="Facebook">
-                        <img src="../Media/facebook.png" alt="Facebook">
-                    </a>
-                    <a href="#" aria-label="LinkedIn">
-                        <img src="../Media/linkedin.png" alt="LinkedIn">
-                    </a>
-                    <a href="#" aria-label="YouTube">
-                        <img src="../Media/youtube.png" alt="YouTube">
-                    </a>
-                    <a href="#" aria-label="Instagram">
-                        <img src="../Media/instagram.png" alt="Instagram">
-                    </a>
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 </div>
                 <div class="footer-logo">
                     <img src="../Media/Logo.png" alt="Si'aa Logo" class="footer-logo-img">
@@ -411,4 +328,5 @@
 
 
 </body>
+
 </html>

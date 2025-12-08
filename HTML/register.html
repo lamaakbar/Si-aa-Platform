@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Si'aa - Create Account</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-..." crossorigin="anonymous">
     <link rel="stylesheet" href="../CSS/styles.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -43,62 +49,112 @@
                 </div>
 
                 <div class="auth-card">
+                    <!-- Toggle Buttons at Top -->
+                    <div class="auth-toggle-group">
+                        <button type="button" class="auth-toggle-btn active" data-type="seeker">
+                            Find Storage
+                        </button>
+                        <button type="button" class="auth-toggle-btn" data-type="provider">
+                            List My Space
+                        </button>
+                    </div>
+
                     <h2 class="auth-title">Create Account</h2>
                     <p class="auth-subtitle">It only takes a minute to get started.</p>
 
-                    <form class="auth-form" action="#" method="post">
+                    <form class="auth-form" action="#" method="post" enctype="multipart/form-data" novalidate>
+                        <!-- Hidden input to store selected type -->
+                        <input type="hidden" id="accountType" name="accountType" value="seeker">
+
                         <!-- Full Name -->
                         <div class="form-group">
                             <label for="fullName" class="form-label">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Enter your full name" required>
+                            <input type="text" id="fullName" name="fullName" class="form-input"
+                                placeholder="Enter your full name" required>
                         </div>
 
                         <!-- Email -->
                         <div class="form-group">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" id="email" name="email" class="form-input" placeholder="name@example.com" required>
+                            <input type="email" id="email" name="email" class="form-input"
+                                placeholder="name@example.com" required>
                         </div>
 
                         <!-- Phone -->
                         <div class="form-group">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="5X XXX XXXX" min="9" max="9 required">
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="5X XXX XXXX"
+                                required>
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="form-group">
+                            <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-input">
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <div class="form-group-inline">
+                                <label class="form-radio"><input type="radio" name="gender" value="Male" checked>
+                                    Male</label>
+                                <label class="form-radio"><input type="radio" name="gender" value="Female">
+                                    Female</label>
+                                <label class="form-radio"><input type="radio" name="gender" value="Other"> Other</label>
+                            </div>
+                        </div>
+
+                        <!-- National ID -->
+                        <div class="form-group">
+                            <label for="nationalId" class="form-label">National ID</label>
+                            <input type="text" id="nationalId" name="nationalId" class="form-input"
+                                placeholder="e.g. 1023456789">
+                        </div>
+
+                        <!-- Company Name (optional) -->
+                        <div class="form-group">
+                            <label for="companyName" class="form-label">Company (optional)</label>
+                            <input type="text" id="companyName" name="companyName" class="form-input"
+                                placeholder="Company name">
+                        </div>
+
+                        <!-- Profile Picture Upload -->
+                        <div class="mb-3">
+                            <label for="profilePicture" class="form-label">Profile Picture (optional)</label>
+                            <input class="form-control" type="file" id="profilePicture" accept="image/*">
+                            <div class="mt-2" id="profilePreviewWrapper" style="display:none;">
+                                <img id="profilePreviewImg" src="#" alt="Profile Preview" class="img-thumbnail"
+                                    style="max-width: 150px; max-height:150px;">
+                            </div>
                         </div>
 
                         <!-- Password -->
                         <div class="form-group">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" id="password" name="password" class="form-input" placeholder="Create a strong password" required>
+                            <input type="password" id="password" name="password" class="form-input"
+                                placeholder="Create a strong password" required>
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="form-group">
                             <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="Re-enter your password" required>
-                        </div>
-
-                        <!-- User Type -->
-                        <div class="form-group">
-                            <label class="form-label">I want to:</label>
-                            <div class="form-radio-group">
-                                <label class="form-radio">
-                                    <input type="radio" name="accountType" value="seeker" checked>
-                                    <span>Find storage</span>
-                                </label>
-                                <label class="form-radio">
-                                    <input type="radio" name="accountType" value="provider">
-                                    <span>List my space</span>
-                                </label>
-                            </div>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input"
+                                placeholder="Re-enter your password" required>
                         </div>
 
                         <!-- Terms -->
                         <div class="form-group form-group-inline">
                             <label class="form-checkbox">
                                 <input type="checkbox" name="terms" required>
-                                <span>I agree to Si'aa’s Terms & Privacy Policy</span>
+                                <span>I agree to Si'aa's Terms & Privacy Policy</span>
                             </label>
                         </div>
+
+                        <!-- Hidden backend fields with sensible defaults (can be overridden) -->
+                        <input type="hidden" id="isVerified" name="isVerified" value="0">
+                        <input type="hidden" id="verificationDate" name="verificationDate" value="">
+                        <input type="hidden" id="accountStatus" name="accountStatus" value="Active">
 
                         <!-- Submit -->
                         <button type="submit" class="btn btn-dark btn-large auth-submit">
@@ -110,6 +166,7 @@
                             <a href="login.html">Log in</a>
                         </p>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -120,18 +177,10 @@
         <div class="container">
             <div class="footer-content">
                 <div class="social-icons">
-                    <a href="#" aria-label="Facebook">
-                        <img src="../Media/facebook.png" alt="Facebook">
-                    </a>
-                    <a href="#" aria-label="LinkedIn">
-                        <img src="../Media/linkedin.png" alt="LinkedIn">
-                    </a>
-                    <a href="#" aria-label="YouTube">
-                        <img src="../Media/youtube.png" alt="YouTube">
-                    </a>
-                    <a href="#" aria-label="Instagram">
-                        <img src="../Media/instagram.png" alt="Instagram">
-                    </a>
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 </div>
                 <div class="footer-logo">
                     <img src="../Media/Logo.png" alt="Si'aa Logo" class="footer-logo-img">
@@ -143,4 +192,5 @@
 
 
 </body>
+
 </html>

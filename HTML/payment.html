@@ -1,53 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Si'aa - Payment</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../CSS/styles.css">
 </head>
+
 <body>
-    <!-- Header -->
-    <header class="payment-header">
-        <div class="payment-header-content">
-            <div class="payment-header-left">
+     <!-- Header -->
+     <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <button class="btn btn-primary btn-header" onclick="window.location.href='register.html'">Get
+                    Started</button>
+                <nav class="nav">
+                    <a href="#about">About</a>
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                </nav>
                 <div class="logo">
                     <img src="../Media/Logo.png" alt="Si'aa Logo" class="logo-img">
                 </div>
-                <nav class="payment-nav">
-                    <a href="index.html#about">About</a>
-                    <a href="index.html#features">Features</a>
-                    <a href="index.html#how-it-works">How It Works</a>
-                </nav>
             </div>
-            <button class="btn btn-primary btn-header" onclick="window.location.href='register.html'">Get Started</button>
         </div>
     </header>
 
     <!-- Payment Section -->
-    <section class="payment-section">
+    <section class="auth-section">
         <div class="payment-container">
             <!-- Payment Form -->
             <div class="payment-form-section">
                 <h1 class="payment-title">Payment</h1>
-                
+
                 <form class="payment-form">
                     <div class="payment-form-group">
                         <label for="cardHolder" class="payment-form-label">
                             Card Holder Name
                             <span class="info-icon" title="Enter the name as it appears on your card">i</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="cardHolder" 
-                            name="cardHolder" 
-                            class="payment-input" 
-                            placeholder="Lama Akbar"
-                            required
-                        >
+                        <input type="text" id="cardHolder" name="cardHolder" class="payment-input"
+                            placeholder="Lama Akbar" required>
                     </div>
 
                     <div class="payment-form-group">
@@ -55,14 +54,8 @@
                             Card Number
                             <span class="info-icon" title="Enter your 16-digit card number">i</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="cardNumber" 
-                            name="cardNumber" 
-                            class="payment-input card-number" 
-                            placeholder="1234 1234 1234 1234"
-                            required
-                        >
+                        <input type="text" id="cardNumber" name="cardNumber" class="payment-input card-number"
+                            placeholder="1234 1234 1234 1234" required>
                     </div>
 
                     <div class="payment-form-group">
@@ -70,15 +63,8 @@
                             CCV
                             <span class="info-icon" title="3-digit security code on the back of your card">i</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="ccv" 
-                            name="ccv" 
-                            class="payment-input masked" 
-                            placeholder="- - -"
-                            maxlength="7"
-                            required
-                        >
+                        <input type="text" id="ccv" name="ccv" class="payment-input masked" placeholder="- - -"
+                            maxlength="7" required>
                     </div>
 
                     <div class="payment-form-group">
@@ -86,15 +72,8 @@
                             Expirity Date
                             <span class="info-icon" title="Expiration date in MM/YY format">i</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="expiryDate" 
-                            name="expiryDate" 
-                            class="payment-input" 
-                            placeholder="MM / YY"
-                            maxlength="7"
-                            required
-                        >
+                        <input type="text" id="expiryDate" name="expiryDate" class="payment-input" placeholder="MM / YY"
+                            maxlength="7" required>
                     </div>
 
                     <button type="submit" class="complete-payment-btn">Complete Payment</button>
@@ -104,7 +83,7 @@
             <!-- Payment Summary -->
             <div class="payment-summary-card">
                 <h2 class="payment-summary-title">Payment Summary</h2>
-                
+
                 <div class="payment-summary-items">
                     <div class="payment-summary-item">
                         <span class="payment-summary-item-label">Storage</span>
@@ -116,11 +95,11 @@
                     </div>
                     <div class="payment-summary-item">
                         <span class="payment-summary-item-label">insurance fee</span>
-                        <span class="payment-summary-item-value">$ 123,28</span>
+                        <span class="payment-summary-item-value"><img src="../Media/Saudi_Riyal_Symbol.png" alt="Saudi Riyal Symbol" class="riyal-symbol-img">123,28</span>
                     </div>
                     <div class="payment-summary-item">
                         <span class="payment-summary-item-label">TAX</span>
-                        <span class="payment-summary-item-value">$ 123,28</span>
+                        <span class="payment-summary-item-value"><img src="../Media/Saudi_Riyal_Symbol.png" alt="Saudi Riyal Symbol" class="riyal-symbol-img">123,28</span>
                     </div>
                 </div>
 
@@ -129,8 +108,9 @@
                 <div class="payment-summary-total">
                     <span class="payment-summary-total-label">Total</span>
                     <div class="payment-summary-total-wrapper">
-                        <span class="payment-summary-total-value">$ 576,32</span>
-                        <div class="receipt-icon">📄</div>
+                        <div class="receipt-icon"><img src="../Media/Saudi_Riyal_Symbol.png" alt="Saudi Riyal Symbol"></div>
+                        <span class="payment-summary-total-value"> 576,32</span>
+                        
                     </div>
                 </div>
             </div>
@@ -142,22 +122,14 @@
         <div class="payment-footer-content">
             <div class="payment-footer-left">
                 <div class="payment-footer-logo-text">Si'aa logo</div>
-                <div class="payment-footer-social">
-                    <a href="#" aria-label="Facebook">
-                        <img src="../Media/facebook.png" alt="Facebook">
-                    </a>
-                    <a href="#" aria-label="LinkedIn">
-                        <img src="../Media/linkedin.png" alt="LinkedIn">
-                    </a>
-                    <a href="#" aria-label="YouTube">
-                        <img src="../Media/youtube.png" alt="YouTube">
-                    </a>
-                    <a href="#" aria-label="Instagram">
-                        <img src="../Media/instagram.png" alt="Instagram">
-                    </a>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
-            
+
             <div class="payment-footer-links">
                 <div class="payment-footer-column">
                     <div class="payment-footer-column-title">Topic</div>
@@ -183,5 +155,5 @@
 
     <script src="../Javascript/payment.js"></script>
 </body>
-</html>
 
+</html>
