@@ -1553,6 +1553,7 @@ body {
 }
 
 .storage-card__match {
+    text-align: center;
     padding: 4px 10px;
     border-radius: 999px;
     font-size: 12px;

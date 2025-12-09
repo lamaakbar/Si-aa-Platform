@@ -45,7 +45,7 @@ function showLoginPrompt() {
     // Hide all dashboard content
     const dashboardMain = document.querySelector('.dashboard-main');
     const sidebar = document.querySelector('.sideBar');
-
+    
     if (sidebar) {
         sidebar.style.display = 'none';
     }
@@ -87,6 +87,35 @@ function logout() {
 }
 
 // =============================================
+// UTILITY: Price formatting & helpers
+// =============================================
+
+/**
+ * Format a numeric price to have thousands separators and 2 decimals
+ * Example: 1234.5 -> "1,234.50"
+ */
+function formatPrice(value) {
+    if (value === null || value === undefined || isNaN(Number(value))) {
+        return '0.00';
+    }
+    const num = Number(value);
+    // Use toLocaleString for reliable grouping with two decimal places
+    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/**
+ * Format price with currency suffix (SAR)
+ */
+function formatPriceWithCurrency(value, suffix = 'SAR') {
+    return `${formatPrice(value)} ${suffix}`;
+}
+
+// Small helper to safely get numeric value from API stats
+function toNumber(v) {
+    return v === null || v === undefined ? 0 : Number(v);
+}
+
+// =============================================
 // DASHBOARD INITIALIZATION
 // =============================================
 
@@ -94,7 +123,7 @@ async function initializeDashboard() {
     try {
         // Update welcome message
         document.getElementById('userNameDisplay').textContent = currentUser.firstName;
-
+        
         // Update role display
         const roleText = currentUser.userType === 'seeker' ? 'Storage Seeker' : 'Storage Provider';
         document.getElementById('userRoleDisplay').textContent = roleText;
@@ -106,7 +135,7 @@ async function initializeDashboard() {
             actionButton.onclick = () => window.location.href = 'search.html';
         } else {
             actionButton.textContent = 'Add New Space';
-            actionButton.onclick = () => window.location.href = 'search.html';
+            actionButton.onclick = () => window.location.href = 'listSpace.html';
         }
 
         // Update history section title
@@ -140,32 +169,178 @@ async function initializeDashboard() {
     }
 }
 // =============================================
-// UTILITY: Price formatting & helpers
+// REVIEW MODAL FUNCTIONALITY
 // =============================================
 
-/**
- * Format a numeric price to have thousands separators and 2 decimals
- * Example: 1234.5 -> "1,234.50"
- */
-function formatPrice(value) {
-    if (value === null || value === undefined || isNaN(Number(value))) {
-        return '0.00';
+function showReviewModal(booking) {
+    const modalHTML = `
+        <div class="review-modal-overlay" id="reviewModalOverlay">
+            <div class="review-modal">
+                <div class="review-modal-header">
+                    <h3>Review Your Experience</h3>
+                    <button class="review-modal-close" onclick="closeReviewModal()">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="review-modal-body">
+                    <div class="review-booking-info">
+                        <h4>${escapeHtml(booking.SpaceTitle)}</h4>
+                        <p>${escapeHtml(booking.SpaceType)} • ${formatDate(booking.StartDate)} - ${formatDate(booking.EndDate)}</p>
+                    </div>
+
+                    <div class="review-form-group">
+                        <label class="review-label">Rating</label>
+                        <div class="review-stars-container" id="reviewStarsContainer">
+                            <span class="review-star" data-value="1">★</span>
+                            <span class="review-star" data-value="2">★</span>
+                            <span class="review-star" data-value="3">★</span>
+                            <span class="review-star" data-value="4">★</span>
+                            <span class="review-star" data-value="5">★</span>
+                        </div>
+                        <p class="review-rating-text" id="reviewRatingText">Select Rating</p>
+                        <input type="hidden" id="reviewRatingValue" value="0">
+                    </div>
+
+                    <div class="review-form-group">
+                        <label class="review-label">Your Review</label>
+                        <textarea 
+                            id="reviewText" 
+                            class="review-textarea" 
+                            rows="4" 
+                            placeholder="Share your experience with this storage space..."
+                            maxlength="500"
+                        ></textarea>
+                        <p class="review-char-count">
+                            <span id="reviewCharCount">0</span>/500 characters
+                        </p>
+                    </div>
+
+                    <p class="review-error" id="reviewError" style="display: none;"></p>
+                </div>
+
+                <div class="review-modal-footer">
+                    <button class="btn btn-outline" onclick="closeReviewModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="submitReview(${booking.BookingID})">
+                        Submit Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    setupReviewStars();
+    setupCharacterCount();
+}
+
+function setupReviewStars() {
+    const stars = document.querySelectorAll('.review-star');
+    const ratingInput = document.getElementById('reviewRatingValue');
+    const ratingText = document.getElementById('reviewRatingText');
+
+    const ratingLabels = {
+        1: "Very Bad",
+        2: "Poor",
+        3: "Average",
+        4: "Good",
+        5: "Excellent"
+    };
+
+    stars.forEach(star => {
+        star.addEventListener('mouseenter', () => {
+            const value = star.getAttribute('data-value');
+            stars.forEach(s => {
+                s.classList.toggle('hovered', s.getAttribute('data-value') <= value);
+            });
+            ratingText.innerText = ratingLabels[value];
+        });
+
+        star.addEventListener('mouseleave', () => {
+            stars.forEach(s => s.classList.remove('hovered'));
+            if (ratingInput.value == 0) {
+                ratingText.innerText = 'Select Rating';
+            } else {
+                ratingText.innerText = ratingLabels[ratingInput.value];
+            }
+        });
+
+        star.addEventListener('click', () => {
+            const value = star.getAttribute('data-value');
+            ratingInput.value = value;
+            stars.forEach(s => {
+                s.classList.toggle('selected', s.getAttribute('data-value') <= value);
+            });
+            ratingText.innerText = ratingLabels[value];
+        });
+    });
+}
+
+function setupCharacterCount() {
+    const textarea = document.getElementById('reviewText');
+    const charCount = document.getElementById('reviewCharCount');
+
+    if (textarea && charCount) {
+        textarea.addEventListener('input', () => {
+            charCount.textContent = textarea.value.length;
+        });
     }
-    const num = Number(value);
-    // Use toLocaleString for reliable grouping with two decimal places
-    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-/**
- * Format price with currency suffix (SAR)
- */
-function formatPriceWithCurrency(value, suffix = 'SAR') {
-    return `${formatPrice(value)} ${suffix}`;
+function closeReviewModal() {
+    const modal = document.getElementById('reviewModalOverlay');
+    if (modal) {
+        modal.remove();
+    }
 }
 
-// Small helper to safely get numeric value from API stats
-function toNumber(v) {
-    return v === null || v === undefined ? 0 : Number(v);
+async function submitReview(bookingId) {
+    const ratingValue = parseInt(document.getElementById('reviewRatingValue').value);
+    const reviewText = document.getElementById('reviewText').value.trim();
+    const errorEl = document.getElementById('reviewError');
+
+    // Validate
+    if (ratingValue === 0) {
+        errorEl.textContent = 'Please select a rating';
+        errorEl.style.display = 'block';
+        return;
+    }
+
+    if (reviewText.length < 10) {
+        errorEl.textContent = 'Review must be at least 10 characters';
+        errorEl.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/review`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('siaaToken')}`
+            },
+            body: JSON.stringify({
+                rating: ratingValue,
+                comment: reviewText,
+                seekerId: currentUser.id
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to submit review');
+        }
+
+        showSuccess('Review submitted successfully!');
+        closeReviewModal();
+        await loadHistory(); // Reload to update UI
+
+    } catch (error) {
+        console.error('Review submission error:', error);
+        errorEl.textContent = error.message;
+        errorEl.style.display = 'block';
+    }
 }
 
 // =============================================
@@ -195,7 +370,7 @@ async function loadProfile() {
         document.getElementById('profileLastName').value = profile.LastName || '';
         document.getElementById('profileEmail').value = profile.Email || '';
         document.getElementById('profilePhone').value = profile.PhoneNumber || '';
-        document.getElementById('profileRole').value =
+        document.getElementById('profileRole').value = 
             currentUser.userType === 'seeker' ? 'Storage Seeker' : 'Storage Provider';
         document.getElementById('profileStatus').value = profile.AccountStatus || '';
 
@@ -225,12 +400,12 @@ async function updateProfile(formData) {
 
         const data = await response.json();
         showSuccess('Profile updated successfully!');
-
+        
         // Update current user data
         currentUser.firstName = formData.firstName;
         currentUser.lastName = formData.lastName;
         localStorage.setItem('siaaUser', JSON.stringify(currentUser));
-
+        
         // Update display
         document.getElementById('userNameDisplay').textContent = currentUser.firstName;
 
@@ -241,7 +416,7 @@ async function updateProfile(formData) {
 }
 
 // =============================================
-// HISTORY MANAGEMENT
+// HISTORY MANAGEMENT WITH REVIEW SUPPORT
 // =============================================
 
 async function loadHistory() {
@@ -250,7 +425,6 @@ async function loadHistory() {
     const historyEmpty = document.getElementById('historyEmptyMessage');
 
     try {
-        // Show loading
         historyLoading.style.display = 'block';
         historyList.innerHTML = '';
         historyEmpty.style.display = 'none';
@@ -283,7 +457,6 @@ async function loadHistory() {
         const data = await response.json();
         const items = currentUser.userType === 'seeker' ? data.bookings : data.spaces;
 
-        // Hide loading
         historyLoading.style.display = 'none';
 
         if (items.length === 0) {
@@ -291,9 +464,8 @@ async function loadHistory() {
             return;
         }
 
-        // Render history items
         if (currentUser.userType === 'seeker') {
-            renderBookings(items);
+            await renderBookingsWithReviews(items);
         } else {
             renderSpaces(items);
         }
@@ -305,20 +477,56 @@ async function loadHistory() {
     }
 }
 
-function renderBookings(bookings) {
+async function renderBookingsWithReviews(bookings) {
     const historyList = document.getElementById('historyList');
     historyList.innerHTML = '';
+
+    // Fetch existing reviews
+    let existingReviews = [];
+    try {
+        const reviewsResponse = await fetch(
+            `${API_BASE_URL}/seeker/${currentUser.id}/reviews`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('siaaToken')}`
+                }
+            }
+        );
+        if (reviewsResponse.ok) {
+            const reviewsData = await reviewsResponse.json();
+            existingReviews = reviewsData.reviews || [];
+        }
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+    }
 
     bookings.forEach(booking => {
         const li = document.createElement('li');
         li.className = 'history-item';
 
         const statusClass = getStatusClass(booking.BookingStatus);
+        const hasReview = existingReviews.some(r => r.BookingID === booking.BookingID);
+        const canReview = booking.BookingStatus === 'Completed' && !hasReview;
+
+        const reviewButton = canReview ? `
+            <button class="btn btn-outline btn-small review-btn" onclick="showReviewModal(${JSON.stringify(booking).replace(/"/g, '&quot;')})">
+                <i class="fa-solid fa-star"></i> Write Review
+            </button>
+        ` : '';
+
+        const reviewBadge = hasReview ? `
+            <span class="review-badge">
+                <i class="fa-solid fa-check-circle"></i> Reviewed
+            </span>
+        ` : '';
 
         li.innerHTML = `
             <div class="history-item-header">
                 <h3 class="history-item-title">${escapeHtml(booking.SpaceTitle)}</h3>
-                <span class="history-item-badge ${statusClass}">${booking.BookingStatus}</span>
+                <div class="history-item-badges">
+                    <span class="history-item-badge ${statusClass}">${booking.BookingStatus}</span>
+                    ${reviewBadge}
+                </div>
             </div>
             <div class="history-item-details">
                 <p><i class="fa-solid fa-location-dot"></i> ${escapeHtml(booking.City || 'N/A')}, ${escapeHtml(booking.AddressLine1 || '')}</p>
@@ -327,8 +535,13 @@ function renderBookings(bookings) {
                 <p><i class="fa-solid fa-box"></i> Type: ${escapeHtml(booking.SpaceType)} | Size: ${booking.Size} m²</p>
             </div>
             <div class="history-item-footer">
-                <span class="history-item-date">Booked: ${formatDate(booking.CreatedAt)}</span><br>
-                <span class="history-item-price">${formatPriceWithCurrency(booking.TotalAmount.toFixed(2))}</span>
+                <div class="history-item-footer-left">
+                    <span class="history-item-date">Booked: ${formatDate(booking.CreatedAt)}</span><br>
+                    <span class="history-item-price">${formatPriceWithCurrency(booking.TotalAmount)}</span>
+                </div>
+                <div class="history-item-footer-right">
+                    ${reviewButton}
+                </div>
             </div>
         `;
 
@@ -358,7 +571,7 @@ function renderSpaces(spaces) {
                 <p><i class="fa-solid fa-check-circle"></i> Available: ${space.IsAvailable ? 'Yes' : 'No'} | Active Bookings: ${space.ActiveBookings}</p>
             </div>
             <div class="history-item-footer">
-                <span class="history-item-price">${formatPriceWithCurrency(space.PricePerMonth.toFixed(2))}</span>
+                <span class="history-item-price">${formatPriceWithCurrency(space.PricePerMonth)}</span>
                 <span class="history-item-date">Listed: ${formatDate(space.CreatedAt)}</span>
             </div>
         `;
@@ -366,6 +579,7 @@ function renderSpaces(spaces) {
         historyList.appendChild(li);
     });
 }
+
 
 // =============================================
 // STATISTICS MANAGEMENT
@@ -406,13 +620,14 @@ async function loadStatistics() {
             document.getElementById('statTotal').textContent = stats.TotalBookings || 0;
             document.getElementById('statActive').textContent = stats.ActiveBookings || 0;
             document.getElementById('statPending').textContent = stats.PendingBookings || 0;
-            document.getElementById('statRevenue').textContent =
+            document.getElementById('statRevenue').textContent = 
                 formatPriceWithCurrency(stats.TotalSpent || 0);
         } else {
             document.getElementById('statTotal').textContent = stats.TotalSpaces || 0;
             document.getElementById('statActive').textContent = stats.ActiveSpaces || 0;
             document.getElementById('statPending').textContent = stats.PendingSpaces || 0;
-            document.getElementById('statRevenue').textContent = formatPriceWithCurrency(stats.TotalRevenue) || 0;
+            document.getElementById('statRevenue').textContent = 
+                formatPriceWithCurrency(booking.TotalAmount(stats.TotalRevenue || 0));
         }
 
     } catch (error) {
@@ -462,9 +677,9 @@ function setupEventListeners() {
 
 function handleSidebarNavigation(e) {
     e.preventDefault();
-
+    
     const targetSection = this.getAttribute('data-section');
-
+    
     if (!targetSection) return;
 
     // Remove active class from all links and sections
@@ -488,7 +703,7 @@ function enableProfileEditing() {
     inputs.forEach(input => {
         input.disabled = false;
     });
-
+    
     document.getElementById('editProfileBtn').disabled = true;
     document.getElementById('saveProfileBtn').disabled = false;
 }
@@ -507,7 +722,7 @@ async function handleProfileSave() {
     inputs.forEach(input => {
         input.disabled = true;
     });
-
+    
     document.getElementById('editProfileBtn').disabled = false;
     document.getElementById('saveProfileBtn').disabled = true;
 }
@@ -533,10 +748,10 @@ function getStatusClass(status) {
 function formatDate(dateString) {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+    return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
     });
 }
 

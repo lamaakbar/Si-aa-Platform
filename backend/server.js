@@ -376,6 +376,528 @@ app.post('/api/auth/register', async (req, res) => {
         res.status(500).json({ error: 'Server error during registration' });
     }
 });
+// =============================================
+// BOOKING ENDPOINTS
+// =============================================
+
+// Create a new booking
+app.post('/api/bookings', async (req, res) => {
+    try {
+        const { 
+            seekerId, 
+            spaceId, 
+            startDate, 
+            endDate, 
+            totalAmount 
+        } = req.body;
+
+        // Validate inputs
+        if (!seekerId || !spaceId || !startDate || !endDate) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const pool = await poolPromise;
+
+        // Check if space is available
+        const spaceCheck = await pool.request()
+            .input('spaceId', sql.Int, spaceId)
+            .query(`
+                SELECT SpaceID, AvailabilityStatus, PricePerMonth
+                FROM StorageSpaces
+                WHERE SpaceID = @spaceId
+            `);
+
+        if (spaceCheck.recordset.length === 0) {
+            return res.status(404).json({ error: 'Space not found' });
+        }
+
+        if (spaceCheck.recordset[0].AvailabilityStatus !== 'Available') {
+            return res.status(400).json({ error: 'Space is not available for booking' });
+        }
+
+        // Check for date conflicts
+        const conflictCheck = await pool.request()
+            .input('spaceId', sql.Int, spaceId)
+            .input('startDate', sql.DateTime2, new Date(startDate))
+            .input('endDate', sql.DateTime2, new Date(endDate))
+            .query(`
+                SELECT BookingID
+                FROM Bookings
+                WHERE SpaceID = @spaceId
+                AND BookingStatus NOT IN ('Cancelled', 'Completed')
+                AND (
+                    (@startDate BETWEEN StartDate AND EndDate)
+                    OR (@endDate BETWEEN StartDate AND EndDate)
+                    OR (StartDate BETWEEN @startDate AND @endDate)
+                )
+            `);
+
+        if (conflictCheck.recordset.length > 0) {
+            return res.status(409).json({ error: 'Space is already booked for the selected dates' });
+        }
+
+        // Calculate total amount if not provided
+        let calculatedAmount = totalAmount;
+        if (!calculatedAmount) {
+            const pricePerMonth = spaceCheck.recordset[0].PricePerMonth;
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const months = (end - start) / (1000 * 60 * 60 * 24 * 30);
+            calculatedAmount = Math.ceil(months) * pricePerMonth;
+        }
+
+        // Create booking
+        const result = await pool.request()
+            .input('seekerId', sql.Int, seekerId)
+            .input('spaceId', sql.Int, spaceId)
+            .input('startDate', sql.DateTime2, new Date(startDate))
+            .input('endDate', sql.DateTime2, new Date(endDate))
+            .input('totalAmount', sql.Decimal(10, 2), calculatedAmount)
+            .query(`
+                INSERT INTO Bookings (
+                    SeekerID, SpaceID, StartDate, EndDate, 
+                    BookingStatus, TotalAmount, BookingDate
+                )
+                OUTPUT INSERTED.*
+                VALUES (
+                    @seekerId, @spaceId, @startDate, @endDate,
+                    'Pending', @totalAmount, GETDATE()
+                )
+            `);
+
+        const booking = result.recordset[0];
+
+        res.status(201).json({
+            success: true,
+            message: 'Booking created successfully',
+            booking: {
+                bookingId: booking.BookingID,
+                seekerId: booking.SeekerID,
+                spaceId: booking.SpaceID,
+                startDate: booking.StartDate,
+                endDate: booking.EndDate,
+                totalAmount: booking.TotalAmount,
+                bookingStatus: booking.BookingStatus,
+                bookingDate: booking.BookingDate
+            }
+        });
+
+    } catch (err) {
+        console.error('Booking creation error:', err);
+        res.status(500).json({ error: 'Server error creating booking' });
+    }
+});
+
+// Get bookings for a seeker
+app.get('/api/seeker/:seekerId/bookings', async (req, res) => {
+    try {
+        const { seekerId } = req.params;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('seekerId', sql.Int, seekerId)
+            .query(`
+                SELECT 
+                    b.*,
+                    s.Title as SpaceTitle,
+                    s.SpaceType,
+                    s.Location,
+                    s.City,
+                    s.ImageURL,
+                    p.FirstName + ' ' + p.LastName as ProviderName,
+                    p.PhoneNumber as ProviderPhone
+                FROM Bookings b
+                JOIN StorageSpaces s ON b.SpaceID = s.SpaceID
+                JOIN StorageProviders p ON s.ProviderID = p.ProviderID
+                WHERE b.SeekerID = @seekerId
+                ORDER BY b.BookingDate DESC
+            `);
+
+        res.json({
+            success: true,
+            bookings: result.recordset
+        });
+
+    } catch (err) {
+        console.error('Bookings fetch error:', err);
+        res.status(500).json({ error: 'Server error fetching bookings' });
+    }
+});
+
+// Update booking status
+app.put('/api/bookings/:bookingId/status', async (req, res) => {
+    try {
+        const { bookingId } = req.params;
+        const { status, seekerId } = req.body;
+
+        const validStatuses = ['Pending', 'Confirmed', 'Active', 'Completed', 'Cancelled'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ error: 'Invalid booking status' });
+        }
+
+        const pool = await poolPromise;
+
+        // Verify booking ownership
+        const bookingCheck = await pool.request()
+            .input('bookingId', sql.Int, bookingId)
+            .input('seekerId', sql.Int, seekerId)
+            .query(`
+                SELECT BookingID 
+                FROM Bookings 
+                WHERE BookingID = @bookingId AND SeekerID = @seekerId
+            `);
+
+        if (bookingCheck.recordset.length === 0) {
+            return res.status(404).json({ error: 'Booking not found or unauthorized' });
+        }
+
+        // Update status
+        await pool.request()
+            .input('bookingId', sql.Int, bookingId)
+            .input('status', sql.NVarChar, status)
+            .query(`
+                UPDATE Bookings
+                SET BookingStatus = @status
+                WHERE BookingID = @bookingId
+            `);
+
+        res.json({
+            success: true,
+            message: 'Booking status updated successfully'
+        });
+
+    } catch (err) {
+        console.error('Booking update error:', err);
+        res.status(500).json({ error: 'Server error updating booking' });
+    }
+});
+
+// Cancel a booking
+app.delete('/api/bookings/:bookingId', async (req, res) => {
+    try {
+        const { bookingId } = req.params;
+        const { seekerId } = req.query;
+
+        const pool = await poolPromise;
+
+        // Verify booking ownership
+        const bookingCheck = await pool.request()
+            .input('bookingId', sql.Int, bookingId)
+            .input('seekerId', sql.Int, seekerId)
+            .query(`
+                SELECT BookingID, BookingStatus
+                FROM Bookings 
+                WHERE BookingID = @bookingId AND SeekerID = @seekerId
+            `);
+
+        if (bookingCheck.recordset.length === 0) {
+            return res.status(404).json({ error: 'Booking not found or unauthorized' });
+        }
+
+        // Update to cancelled status instead of deleting
+        await pool.request()
+            .input('bookingId', sql.Int, bookingId)
+            .query(`
+                UPDATE Bookings
+                SET BookingStatus = 'Cancelled'
+                WHERE BookingID = @bookingId
+            `);
+
+        res.json({
+            success: true,
+            message: 'Booking cancelled successfully'
+        });
+
+    } catch (err) {
+        console.error('Booking cancellation error:', err);
+        res.status(500).json({ error: 'Server error cancelling booking' });
+    }
+});
+
+// =============================================
+// REVIEW ENDPOINTS
+// =============================================
+
+// Get reviews for a space
+app.get('/api/spaces/:spaceId/reviews', async (req, res) => {
+    try {
+        const { spaceId } = req.params;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('spaceId', sql.Int, spaceId)
+            .query(`
+                SELECT 
+                    r.ReviewID,
+                    r.Rating,
+                    r.Comment as ReviewText,
+                    r.CreatedAt,
+                    s.FirstName + ' ' + s.LastName as ReviewerName,
+                    b.BookingID
+                FROM Reviews r
+                JOIN Bookings b ON r.BookingID = b.BookingID
+                JOIN StorageSeekers s ON r.ReviewerSeekerID = s.SeekerID
+                WHERE b.SpaceID = @spaceId
+                ORDER BY r.CreatedAt DESC
+            `);
+
+        res.json({
+            success: true,
+            reviews: result.recordset
+        });
+
+    } catch (err) {
+        console.error('Reviews fetch error:', err);
+        res.status(500).json({ error: 'Server error fetching reviews' });
+    }
+});
+
+// Submit a review for a completed booking
+app.post('/api/bookings/:bookingId/review', async (req, res) => {
+    try {
+        const { bookingId } = req.params;
+        const { rating, reviewText, seekerId } = req.body;
+
+        // Validate inputs
+        if (!rating || rating < 1 || rating > 5) {
+            return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+        }
+
+        if (!reviewText || reviewText.trim().length < 10) {
+            return res.status(400).json({ error: 'Review text must be at least 10 characters' });
+        }
+
+        const pool = await poolPromise;
+
+        // Check if booking exists and is completed
+        const bookingCheck = await pool.request()
+            .input('bookingId', sql.Int, bookingId)
+            .input('seekerId', sql.Int, seekerId)
+            .query(`
+                SELECT BookingID, BookingStatus, SeekerID, SpaceID
+                FROM Bookings
+                WHERE BookingID = @bookingId AND SeekerID = @seekerId
+            `);
+
+        if (bookingCheck.recordset.length === 0) {
+            return res.status(404).json({ error: 'Booking not found or unauthorized' });
+        }
+
+        const booking = bookingCheck.recordset[0];
+
+        if (booking.BookingStatus !== 'Completed') {
+            return res.status(400).json({ error: 'Only completed bookings can be reviewed' });
+        }
+
+        // Check if review already exists
+        const reviewCheck = await pool.request()
+            .input('bookingId', sql.Int, bookingId)
+            .query(`
+                SELECT ReviewID FROM Reviews WHERE BookingID = @bookingId
+            `);
+
+        if (reviewCheck.recordset.length > 0) {
+            return res.status(409).json({ error: 'You have already reviewed this booking' });
+        }
+
+        // Insert review (using Comment column and ReviewerSeekerID)
+        const result = await pool.request()
+            .input('bookingId', sql.Int, bookingId)
+            .input('seekerId', sql.Int, seekerId)
+            .input('rating', sql.Int, rating)
+            .input('comment', sql.NVarChar, reviewText.trim())
+            .query(`
+                INSERT INTO Reviews (BookingID, ReviewerSeekerID, Rating, Comment, CreatedAt)
+                OUTPUT INSERTED.ReviewID, INSERTED.Rating, INSERTED.Comment, INSERTED.CreatedAt
+                VALUES (@bookingId, @seekerId, @rating, @comment, GETDATE())
+            `);
+
+        const review = result.recordset[0];
+
+        res.status(201).json({
+            success: true,
+            message: 'Review submitted successfully',
+            review: {
+                reviewId: review.ReviewID,
+                rating: review.Rating,
+                reviewText: review.Comment,
+                createdAt: review.CreatedAt,
+                bookingId: bookingId
+            }
+        });
+
+    } catch (err) {
+        console.error('Review submission error:', err);
+        res.status(500).json({ error: 'Server error submitting review' });
+    }
+});
+
+// Update a review
+app.put('/api/reviews/:reviewId', async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+        const { rating, reviewText, seekerId } = req.body;
+
+        if (!rating || rating < 1 || rating > 5) {
+            return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+        }
+
+        if (!reviewText || reviewText.trim().length < 10) {
+            return res.status(400).json({ error: 'Review text must be at least 10 characters' });
+        }
+
+        const pool = await poolPromise;
+
+        // Verify ownership
+        const ownerCheck = await pool.request()
+            .input('reviewId', sql.Int, reviewId)
+            .input('seekerId', sql.Int, seekerId)
+            .query(`
+                SELECT r.ReviewID
+                FROM Reviews r
+                WHERE r.ReviewID = @reviewId AND r.ReviewerSeekerID = @seekerId
+            `);
+
+        if (ownerCheck.recordset.length === 0) {
+            return res.status(404).json({ error: 'Review not found or unauthorized' });
+        }
+
+        // Update review
+        await pool.request()
+            .input('reviewId', sql.Int, reviewId)
+            .input('rating', sql.Int, rating)
+            .input('comment', sql.NVarChar, reviewText.trim())
+            .query(`
+                UPDATE Reviews
+                SET Rating = @rating,
+                    Comment = @comment,
+                    UpdatedAt = GETDATE()
+                WHERE ReviewID = @reviewId
+            `);
+
+        res.json({
+            success: true,
+            message: 'Review updated successfully'
+        });
+
+    } catch (err) {
+        console.error('Review update error:', err);
+        res.status(500).json({ error: 'Server error updating review' });
+    }
+});
+
+// Delete a review
+app.delete('/api/reviews/:reviewId', async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+        const { seekerId } = req.query;
+
+        const pool = await poolPromise;
+
+        // Verify ownership
+        const ownerCheck = await pool.request()
+            .input('reviewId', sql.Int, reviewId)
+            .input('seekerId', sql.Int, seekerId)
+            .query(`
+                SELECT r.ReviewID
+                FROM Reviews r
+                WHERE r.ReviewID = @reviewId AND r.ReviewerSeekerID = @seekerId
+            `);
+
+        if (ownerCheck.recordset.length === 0) {
+            return res.status(404).json({ error: 'Review not found or unauthorized' });
+        }
+
+        // Delete review
+        await pool.request()
+            .input('reviewId', sql.Int, reviewId)
+            .query(`DELETE FROM Reviews WHERE ReviewID = @reviewId`);
+
+        res.json({
+            success: true,
+            message: 'Review deleted successfully'
+        });
+
+    } catch (err) {
+        console.error('Review deletion error:', err);
+        res.status(500).json({ error: 'Server error deleting review' });
+    }
+});
+
+// Get seeker's reviews
+app.get('/api/seeker/:seekerId/reviews', async (req, res) => {
+    try {
+        const { seekerId } = req.params;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('seekerId', sql.Int, seekerId)
+            .query(`
+                SELECT 
+                    r.ReviewID,
+                    r.Rating,
+                    r.Comment as ReviewText,
+                    r.CreatedAt,
+                    b.BookingID,
+                    b.BookingStatus,
+                    s.Title as SpaceTitle,
+                    s.SpaceType,
+                    p.FirstName + ' ' + p.LastName as ProviderName
+                FROM Reviews r
+                JOIN Bookings b ON r.BookingID = b.BookingID
+                JOIN StorageSpaces s ON b.SpaceID = s.SpaceID
+                JOIN StorageProviders p ON s.ProviderID = p.ProviderID
+                WHERE r.ReviewerSeekerID = @seekerId
+                ORDER BY r.CreatedAt DESC
+            `);
+
+        res.json({
+            success: true,
+            reviews: result.recordset
+        });
+
+    } catch (err) {
+        console.error('Seeker reviews fetch error:', err);
+        res.status(500).json({ error: 'Server error fetching reviews' });
+    }
+});
+
+// Get provider's received reviews
+app.get('/api/provider/:providerId/reviews', async (req, res) => {
+    try {
+        const { providerId } = req.params;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('providerId', sql.Int, providerId)
+            .query(`
+                SELECT 
+                    r.ReviewID,
+                    r.Rating,
+                    r.Comment as ReviewText,
+                    r.CreatedAt,
+                    b.BookingID,
+                    s.Title as SpaceTitle,
+                    s.SpaceType,
+                    sk.FirstName + ' ' + sk.LastName as ReviewerName
+                FROM Reviews r
+                JOIN Bookings b ON r.BookingID = b.BookingID
+                JOIN StorageSpaces s ON b.SpaceID = s.SpaceID
+                JOIN StorageSeekers sk ON r.ReviewerSeekerID = sk.SeekerID
+                WHERE s.ProviderID = @providerId
+                ORDER BY r.CreatedAt DESC
+            `);
+
+        res.json({
+            success: true,
+            reviews: result.recordset
+        });
+
+    } catch (err) {
+        console.error('Provider reviews fetch error:', err);
+        res.status(500).json({ error: 'Server error fetching reviews' });
+    }
+});
 
 // =============================================
 // PROFILE ENDPOINTS

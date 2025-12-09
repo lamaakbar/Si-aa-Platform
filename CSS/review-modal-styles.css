@@ -1,0 +1,350 @@
+/* =======================
+   Review Modal Styles
+   ======================= */
+
+   .review-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.review-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 550px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.review-modal-header {
+    padding: 24px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.review-modal-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a365d;
+    margin: 0;
+}
+
+.review-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #718096;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.review-modal-close:hover {
+    background: #f7fafc;
+    color: #1a365d;
+}
+
+.review-modal-body {
+    padding: 24px;
+}
+
+.review-booking-info {
+    background: #f7fafc;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border-left: 4px solid #ff6b35;
+}
+
+.review-booking-info h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a365d;
+    margin: 0 0 8px 0;
+}
+
+.review-booking-info p {
+    font-size: 14px;
+    color: #4a5568;
+    margin: 0;
+}
+
+.review-form-group {
+    margin-bottom: 24px;
+}
+
+.review-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 12px;
+}
+
+/* Review Stars */
+.review-stars-container {
+    display: flex;
+    gap: 12px;
+    font-size: 40px;
+    cursor: pointer;
+    color: #d1d5db;
+    margin-bottom: 8px;
+}
+
+.review-star {
+    transition: all 0.2s ease;
+}
+
+.review-star.selected,
+.review-star.hovered {
+    color: #ff6b35;
+    transform: scale(1.1);
+}
+
+.review-rating-text {
+    font-size: 16px;
+    color: #1a365d;
+    font-weight: 600;
+    margin: 8px 0 0 0;
+}
+
+/* Review Textarea */
+.review-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: 'Baloo Bhaijaan 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    resize: vertical;
+    min-height: 120px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.review-textarea:focus {
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.review-char-count {
+    font-size: 12px;
+    color: #718096;
+    margin: 8px 0 0 0;
+    text-align: right;
+}
+
+.review-error {
+    background: #fff5f5;
+    color: #c53030;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-top: 16px;
+    border-left: 4px solid #fc8181;
+}
+
+.review-modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.review-modal-footer .btn {
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.review-modal-footer .btn-outline {
+    background: #ffffff;
+    color: #4a5568;
+    border: 2px solid #e2e8f0;
+}
+
+.review-modal-footer .btn-outline:hover {
+    border-color: #ff6b35;
+    color: #ff6b35;
+    background: #fff5f0;
+}
+
+.review-modal-footer .btn-primary {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.review-modal-footer .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+}
+
+/* =======================
+   Review Badge in History
+   ======================= */
+
+.history-item-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.review-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #d4edda;
+    color: #155724;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.review-badge i {
+    font-size: 14px;
+}
+
+/* Review Button in History */
+.review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #ffffff;
+    color: #ff6b35;
+    border: 2px solid #ff6b35;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.review-btn:hover {
+    background: #fff5f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+}
+
+.review-btn i {
+    font-size: 16px;
+}
+
+/* History Item Footer Layout */
+.history-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.history-item-footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.history-item-footer-right {
+    display: flex;
+    gap: 8px;
+}
+
+/* =======================
+   Responsive Design
+   ======================= */
+
+@media (max-width: 600px) {
+    .review-modal {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .review-modal-header {
+        padding: 20px;
+    }
+
+    .review-modal-body {
+        padding: 20px;
+    }
+
+    .review-stars-container {
+        font-size: 36px;
+        gap: 8px;
+    }
+
+    .review-modal-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .review-modal-footer .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .history-item-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .history-item-footer-right {
+        width: 100%;
+    }
+
+    .review-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
