@@ -1178,7 +1178,6 @@ body {
     border-radius: 0 0 50% 50%;
 }
 
-
 .auth-submit {
     width: 100%;
     margin-top: 6px;
@@ -1519,6 +1518,29 @@ body {
     font-size: 18px;
     font-weight: 700;
     color: #1a365d;
+}
+
+.storage-results__list {
+    max-height: 600px;       
+    overflow-y: auto;        
+    padding-right: 10px;  
+}
+.storage-results__list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.storage-results__list::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+}
+
+.storage-results__list::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 10px;
+}
+
+.storage-results__list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
 .sorting-control {
