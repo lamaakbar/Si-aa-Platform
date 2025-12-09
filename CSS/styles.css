@@ -899,17 +899,19 @@ body {
 .auth-section {
     padding: 80px 20px;
     background-color: #f7fafc;
+    
 }
 
 .auth-wrapper {
     display: grid;
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     gap: 60px;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .auth-intro {
     max-width: 520px;
+    margin-top: 200px;
 }
 
 .auth-main-title {
@@ -954,7 +956,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-bottom: 24px;
-    background-color: #f7fafc;
+    background-color: #fff1e8;
     padding: 6px;
     border-radius: 12px;
 }
@@ -964,7 +966,7 @@ body {
     border-radius: 8px;
     border: none;
     background-color: transparent;
-    color: #4a5568;
+    color: #a0aec0;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -973,25 +975,36 @@ body {
 }
 
 .auth-toggle-btn:hover {
-    color: #1a365d;
+    color: #ff6b35;
 }
 
 .auth-toggle-btn.active {
-    background-color: #ffffff;
-    color: #1a365d;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+    background: linear-gradient(135deg, #ff6b35 0%, #ff9a64 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.35);
 }
 
 /* Card */
 
 .auth-card {
     background-color: #ffffff;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 32px 28px;
-    box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+    border: 1px solid #ffe1cf;
+    position: relative;
+    overflow: hidden;
 }
-
+.auth-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 4px;
+    border-radius: 0 12px 12px 0;
+    background: linear-gradient(180deg, #ff6b35, #ffb89a);
+}
 .auth-title {
     font-size: 26px;
     font-weight: 700;
@@ -1008,11 +1021,31 @@ body {
 /* Form */
 
 .auth-form {
+    display: grid;
+    grid-template-columns: 1fr;  /* mobile default */
+    gap: 18px 24px; /* row gap | column gap */
+}
+
+/* Make it 2 columns on larger screens */
+@media (min-width: 900px) {
+    .auth-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Full-width rows */
+    .full-width,
+    .form-group-inline,
+    .profile-upload-wrapper,
+    .auth-submit,
+    .auth-switch {
+        grid-column: 1 / -1;
+    }
+}
+.auth-form-login {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
-
 .form-group {
     display: flex;
     flex-direction: column;
@@ -1081,13 +1114,13 @@ body {
 .form-radio-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 30px;
 }
 
 .form-radio {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 14px;
     color: #4a5568;
 }
