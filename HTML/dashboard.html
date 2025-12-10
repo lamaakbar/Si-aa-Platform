@@ -71,6 +71,34 @@
 
                     <form id="profileForm" class="profile-form">
                         <div class="profile-grid">
+                        <!-- Profile Picture Upload -->
+                        <div class="form-group profile-picture-group">
+                                <label for="profilePicture" class="form-label">Profile Picture (optional)</label>
+
+                                <div class="profile-picture-wrapper">
+                                    <div class="profile-picture-preview" id="profilePreviewWrapper">
+                                        <img id="profilePreviewImg" src="#" alt="Profile Preview">
+                                        <span class="profile-picture-placeholder">
+                                            <i class="fa-solid fa-user"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="profile-picture-controls">
+                                        <input
+                                            class="profile-picture-input"
+                                            type="file"
+                                            id="profilePicture"
+                                            accept="image/*"
+                                            disabled
+                                        >
+                                        <p class="profile-picture-hint">
+                                            JPG, PNG, max 2MB. A clear front-facing photo works best.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <div class="form-group">
                                 <label for="profileFirstName">First Name</label>
                                 <input type="text" id="profileFirstName" class="form-input" disabled>
@@ -86,6 +114,12 @@
                             <div class="form-group">
                                 <label for="profilePhone">Phone Number</label>
                                 <input type="tel" id="profilePhone" class="form-input" disabled>
+                            </div>
+                            <!-- Company Name (optional)-->
+                            <div class="form-group">
+                                <label for="companyName" class="form-label">Company (optional)</label>
+                                <input type="text" id="companyName" name="companyName" class="form-input"
+                                    placeholder="Company name" disabled>
                             </div>
                             <div class="form-group">
                                 <label for="profileRole">Account Type</label>

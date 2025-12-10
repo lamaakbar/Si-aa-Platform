@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Setup event listeners
     setupEventListeners();
+
+    setupProfilePicturePreview();   
 });
 
 // =============================================
@@ -365,11 +367,22 @@ async function loadProfile() {
         const data = await response.json();
         const profile = data.profile;
 
+        // Show existing profile picture if available
+        const previewWrapper = document.getElementById('profilePreviewWrapper');
+        const previewImg = document.getElementById('profilePreviewImg');
+
+        const profilePictureUrl = profile.ProfilePictureUrl || profile.profilePicture; 
+        if (profilePictureUrl && previewWrapper && previewImg) {
+            previewImg.src = profilePictureUrl;
+            previewWrapper.classList.add('has-image');
+        }
+
         // Populate profile form
         document.getElementById('profileFirstName').value = profile.FirstName || '';
         document.getElementById('profileLastName').value = profile.LastName || '';
         document.getElementById('profileEmail').value = profile.Email || '';
         document.getElementById('profilePhone').value = profile.PhoneNumber || '';
+        document.getElementById('companyName').value = profile.companyName || '';
         document.getElementById('profileRole').value = 
             currentUser.userType === 'seeker' ? 'Storage Seeker' : 'Storage Provider';
         document.getElementById('profileStatus').value = profile.AccountStatus || '';
@@ -703,7 +716,7 @@ function enableProfileEditing() {
     inputs.forEach(input => {
         input.disabled = false;
     });
-    
+    document.getElementById('profilePicture').disabled = false;
     document.getElementById('editProfileBtn').disabled = true;
     document.getElementById('saveProfileBtn').disabled = false;
 }
@@ -712,6 +725,8 @@ async function handleProfileSave() {
     const formData = {
         firstName: document.getElementById('profileFirstName').value,
         lastName: document.getElementById('profileLastName').value,
+        profilePicture: document.getElementById('profilePicture').value,
+        companyName: document.getElementById('companyName').value,
         phoneNumber: document.getElementById('profilePhone').value
     };
 
@@ -722,7 +737,7 @@ async function handleProfileSave() {
     inputs.forEach(input => {
         input.disabled = true;
     });
-    
+    document.getElementById('profilePicture').disabled = true;
     document.getElementById('editProfileBtn').disabled = false;
     document.getElementById('saveProfileBtn').disabled = true;
 }
@@ -789,3 +804,28 @@ if (typeof module !== 'undefined' && module.exports) {
         loadStatistics
     };
 }
+
+// =============================================
+// PROFILE PICTURE PREVIEW SETUP
+// =============================================
+
+function setupProfilePicturePreview() {
+    const fileInput = document.getElementById('profilePicture');
+    const previewWrapper = document.getElementById('profilePreviewWrapper');
+    const previewImg = document.getElementById('profilePreviewImg');
+
+    if (!fileInput || !previewWrapper || !previewImg) return; 
+
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            previewWrapper.classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
