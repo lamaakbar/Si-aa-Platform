@@ -55,6 +55,8 @@
     flex: 1;
     padding: 40px 32px;
     background-color: #ffffff;
+    animation: fade-soft 0.55s ease-out forwards;
+
 }
 
 .dashboard-header {

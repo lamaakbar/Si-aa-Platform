@@ -21,8 +21,36 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Load initial results
     loadStorageSpaces();
-});
+    setupScrollReveal();
 
+});
+function setupScrollReveal() {
+    const resultsList = document.querySelector('.storage-results__list');
+    if (!resultsList) return;
+
+    const observer = new IntersectionObserver(
+        entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            root: resultsList,
+            threshold: 0.05,           
+            rootMargin: "0px 0px -10% 0px"
+        }
+    );
+
+    // Observe initial cards (if any)
+    const cards = document.querySelectorAll('.storage-card');
+    cards.forEach(card => observer.observe(card));
+
+    // Store observer globally so we can reuse for newly added cards
+    window._storageCardObserver = observer;
+}
 function setupFormListener() {
     const form = document.querySelector('.filter-form');
     if (form) {
@@ -149,14 +177,24 @@ function displayResults(spaces) {
     // Clear existing results
     resultsList.innerHTML = '';
     
-    // Add each space as a card
-    spaces.forEach(space => {
+    // Add each space as a card with stagger
+    spaces.forEach((space, index) => {
         const card = createStorageCard(space);
+
+        // Small stagger so cards appear one-by-one
+        card.style.transitionDelay = `${index * 60}ms`; // 0ms, 60ms, 120ms...
+
         resultsList.appendChild(card);
+
+        // Attach each new card to the scroll observer
+        if (window._storageCardObserver) {
+            window._storageCardObserver.observe(card);
+        }
     });
     
     console.log(`Displayed ${spaces.length} results`);
 }
+
 
 function createStorageCard(space) {
     const article = document.createElement('article');
