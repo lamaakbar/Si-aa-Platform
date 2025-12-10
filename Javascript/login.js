@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    const form = document.querySelector('.auth-form');
+    const form = document.querySelector('auth-form-login');
     const emailInput = document.getElementById('loginEmail');
     const passwordInput = document.getElementById('loginPassword');
 
