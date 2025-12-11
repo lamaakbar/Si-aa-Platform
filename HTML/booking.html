@@ -6,7 +6,8 @@
     <title>Si'aa - Booking</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../CSS/styles.css">
 </head>
@@ -32,15 +33,11 @@
 <section class="booking-section">
     <div class="container">
 
-        <!-- Little breadcrumb to show flow Search → Booking -->
-        <p class="booking-breadcrumb">
-            Search &nbsp;›&nbsp; Space details &nbsp;›&nbsp; <span>Booking</span>
-        </p>
+        <h1 class="booking-title">Complete Your Request</h1>
 
         <div class="booking-layout">
             <!-- LEFT: main info + logistics -->
             <div class="booking-main-card">
-                <h1 class="booking-title">Complete Your Request</h1>
 
                 <!-- Space basic info -->
                 <div class="booking-space-header">
@@ -74,7 +71,7 @@
                     <span class="booking-tag">Temperature-controlled</span>
                 </div>
 
-                <!-- Reviews snippet (same text as your Figma) -->
+                <!-- Reviews snippet -->
                 <div class="booking-section-block">
                     <h3 class="booking-section-title">Reviews For This Space</h3>
                     <p class="booking-review-line">
@@ -109,7 +106,28 @@
                     </div>
                 </div>
 
-                <!-- Logistics options (matches Figma text) -->
+                <!--  Start / End Date on booking page -->
+                <div class="booking-section-block">
+                    <h3 class="booking-section-title">Rental Dates</h3>
+
+                    <div class="booking-dates-grid">
+                        <div class="filter-field filter-field--date">
+                            <span class="filter-field__label">Start Date</span>
+                            <input type="date"
+                                   id="bookingStartDate"
+                                   class="filter-text-input">
+                        </div>
+
+                        <div class="filter-field filter-field--date">
+                            <span class="filter-field__label">End Date</span>
+                            <input type="date"
+                                   id="bookingEndDate"
+                                   class="filter-text-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logistics options -->
                 <div class="booking-section-block">
                     <h3 class="booking-section-title">Logistics</h3>
                     <p class="booking-section-subtitle">
@@ -117,8 +135,6 @@
                     </p>
 
                     <div class="booking-logistics-options">
-
-                        <!-- Self drop-off -->
                         <label class="booking-logistics-option">
                             <input type="radio" name="logisticsOption" value="self_dropoff" checked>
                             <div class="booking-logistics-content">
@@ -131,7 +147,6 @@
                             </div>
                         </label>
 
-                        <!-- Si'aa partner pickup -->
                         <label class="booking-logistics-option">
                             <input type="radio" name="logisticsOption" value="partner_pickup">
                             <div class="booking-logistics-content">
@@ -145,7 +160,6 @@
                                 </ul>
                             </div>
                         </label>
-
                     </div>
                 </div>
 
@@ -159,17 +173,16 @@
                 </div>
             </div>
 
-            <!-- RIGHT: Map & space mini summary (as in your Figma card) -->
+            <!-- RIGHT: Map & space mini summary -->
             <aside class="booking-side-card">
                 <h3 class="booking-side-title">Location</h3>
-<div id="bookingMap" class="booking-map">
-    <img
-        src="../Media/TempBookingMap.png.png"
-        alt="Storage location map"
-        class="booking-map-img"
-    />
-</div>
-
+                <div id="bookingMap" class="booking-map">
+                    <img
+                        src="../Media/TempBookingMap.png.png"
+                        alt="Storage location map"
+                        class="booking-map-img"
+                    />
+                </div>
 
                 <div class="booking-side-summary">
                     <div class="booking-side-row">
@@ -178,7 +191,9 @@
                     </div>
                     <div class="booking-side-row">
                         <span class="booking-side-label">Dates</span>
-                        <span id="sideDates" class="booking-side-value">25-10-2025 → 01-11-2025</span>
+                        <span id="sideDates" class="booking-side-value">
+                            Select your dates
+                        </span>
                     </div>
                     <div class="booking-side-row">
                         <span class="booking-side-label">Estimated total</span>

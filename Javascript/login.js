@@ -84,7 +84,7 @@ function showAlert(message, type = 'error') {
     `;
 
     // Insert before form
-    const form = document.querySelector('.auth-form');
+    const form = document.querySelector('.auth-form-login');
     if (form) {
         form.parentNode.insertBefore(alert, form);
     }
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    const form = document.querySelector('auth-form-login');
+    const form = document.querySelector('.auth-form-login');
     const emailInput = document.getElementById('loginEmail');
     const passwordInput = document.getElementById('loginPassword');
 

@@ -269,19 +269,31 @@ function showNoResults() {
 
 function bookSpace(spaceId) {
     console.log('Booking space:', spaceId);
-    
+
+    const rentalDateInput = document.querySelector('input[name="rental_date"]');
+    const startDate = rentalDateInput ? rentalDateInput.value : '';
+
     if (!currentUser) {
-        // User not logged in - redirect to login
         if (confirm('You need to login to book a space. Would you like to login now?')) {
             localStorage.setItem('pendingBookingSpaceId', spaceId);
+            if (startDate) {
+                localStorage.setItem('pendingBookingStartDate', startDate);
+            }
             window.location.href = 'login.html';
         }
         return;
     }
-    
-    // User is logged in - redirect to booking page with space ID
-    window.location.href = `booking.html?spaceId=${spaceId}`;
+
+    // Use space_id consistently
+    let url = `booking.html?space_id=${spaceId}`;
+    if (startDate) {
+        url += `&start=${encodeURIComponent(startDate)}`;
+    }
+
+    window.location.href = url;
 }
+
+
 
 // Setup sorting
 document.addEventListener('DOMContentLoaded', () => {

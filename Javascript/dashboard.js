@@ -19,38 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const editProfileBtn = document.getElementById('editProfileBtn');
     const saveProfileBtn = document.getElementById('saveProfileBtn');
 
-    /* --------- SAMPLE DATA --------- */
-    const providerSpaces = [
-        {
-            title: 'Basement Storage - North Jeddah',
-            size: '12 m²',
-            status: 'Active',
-            since: '2025-01-04'
-        },
-        {
-            title: 'Parking Slot - Al Hamra',
-            size: '8 m²',
-            status: 'Booked',
-            since: '2025-02-10'
-        }
-    ];
-
-    const seekerBookings = [
-        {
-            title: 'Locker Space - King\'s Road',
-            size: '3 m²',
-            status: 'Ongoing',
-            from: '2025-01-20',
-            to: '2025-03-20'
-        },
-        {
-            title: 'Garage Storage - South Jeddah',
-            size: '10 m²',
-            status: 'Completed',
-            from: '2024-09-01',
-            to: '2024-12-01'
-        }
-    ];
 
     function initRoleUI() {
         if (userRole === 'provider') {

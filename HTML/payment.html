@@ -11,6 +11,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../CSS/styles.css">
+
 </head>
 
 <body>
@@ -18,8 +19,6 @@
      <header class="header">
         <div class="container">
             <div class="header-content">
-                <button class="btn btn-primary btn-header" onclick="window.location.href='register.html'">Get
-                    Started</button>
                 <nav class="nav">
                     <a href="#about">About</a>
                     <a href="#features">Features</a>
@@ -45,8 +44,7 @@
                             Card Holder Name
                             <span class="info-icon" title="Enter the name as it appears on your card">i</span>
                         </label>
-                        <input type="text" id="cardHolder" name="cardHolder" class="payment-input"
-                            placeholder="Lama Akbar" required>
+                           <input type="text" placeholder="Cardholder's Name" id="cardHolder" name="cardHolder" class="payment-input card-holder" required> 
                     </div>
 
                     <div class="payment-form-group">
@@ -55,16 +53,16 @@
                             <span class="info-icon" title="Enter your 16-digit card number">i</span>
                         </label>
                         <input type="text" id="cardNumber" name="cardNumber" class="payment-input card-number"
-                            placeholder="1234 1234 1234 1234" required>
+                            placeholder="1234 1234 1234 1234"  maxlength="16" minlength="16" required>
                     </div>
-
+            <div class="payment-row-two">
                     <div class="payment-form-group">
                         <label for="ccv" class="payment-form-label">
                             CCV
                             <span class="info-icon" title="3-digit security code on the back of your card">i</span>
                         </label>
                         <input type="text" id="ccv" name="ccv" class="payment-input masked" placeholder="- - -"
-                            maxlength="7" required>
+                            maxlength="3" minlength="3" required>
                     </div>
 
                     <div class="payment-form-group">
@@ -73,13 +71,12 @@
                             <span class="info-icon" title="Expiration date in MM/YY format">i</span>
                         </label>
                         <input type="text" id="expiryDate" name="expiryDate" class="payment-input" placeholder="MM / YY"
-                            maxlength="7" required>
+                              required>
                     </div>
-
+</div>
                     <button type="submit" class="complete-payment-btn">Complete Payment</button>
                 </form>
-            </div>
-
+        </div>
             <!-- Payment Summary -->
             <div class="payment-summary-card">
                 <h2 class="payment-summary-title">Payment Summary</h2>
@@ -116,43 +113,22 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="payment-footer">
-        <div class="payment-footer-content">
-            <div class="payment-footer-left">
-                <div class="payment-footer-logo-text">Si'aa logo</div>
-                <div class="social-icons">
-                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                    <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                </div>
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             </div>
-
-            <div class="payment-footer-links">
-                <div class="payment-footer-column">
-                    <div class="payment-footer-column-title">Topic</div>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                </div>
-                <div class="payment-footer-column">
-                    <div class="payment-footer-column-title">Topic</div>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                </div>
-                <div class="payment-footer-column">
-                    <div class="payment-footer-column-title">Topic</div>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                    <a href="#" class="payment-footer-column-link">Page</a>
-                </div>
+            <div class="footer-logo">
+                <img src="../Media/Logo.png" alt="Si'aa Logo" class="footer-logo-img">
             </div>
         </div>
-    </footer>
-
+    </div>
+</footer>
     <script src="../Javascript/payment.js"></script>
 </body>
 

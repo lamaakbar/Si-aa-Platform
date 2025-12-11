@@ -6,6 +6,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pyodbc
 import hashlib
+from datetime import datetime
+from decimal import Decimal
+import traceback
 
 app = Flask(__name__)
 CORS(app)
@@ -218,32 +221,85 @@ def search_spaces():
 
 @app.route('/api/spaces/<int:space_id>', methods=['GET'])
 def get_space(space_id):
-    """Get single space details"""
+    """Get single space details, including features"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         
         cursor.execute("""
             SELECT 
-                s.*,
+                -- Space basic info
+                s.SpaceID,
+                s.Title,
+                s.Description,
+                s.SpaceType,
+                s.Size,
+                s.PricePerMonth,
+                s.PricePerWeek,
+                s.PricePerDay,
+                s.IsAvailable,
+                s.Status,
+                s.FavoriteCount,
+
+                -- Features (from SpaceFeatures table)
+                f.FeatureID,
+                f.Temperature,
+                f.Humidity,
+                f.ClimateControlled,
+                f.SecuritySystem,
+                f.CCTVMonitored,
+                f.AccessType,
+                f.ParkingAvailable,
+                f.LoadingAssistance,
+                f.Restrictions,
+
+                -- Provider info
                 p.ProviderID,
                 p.FirstName + ' ' + p.LastName as ProviderName,
                 p.PhoneNumber as ProviderPhone,
                 p.Email as ProviderEmail,
+
+                -- Aggregated rating
                 ISNULL(AVG(CAST(r.Rating as FLOAT)), 0) as AverageRating,
                 COUNT(r.ReviewID) as ReviewCount
+
             FROM StorageSpaces s
             JOIN StorageProviders p ON s.ProviderID = p.ProviderID
+            LEFT JOIN SpaceFeatures f ON s.SpaceID = f.SpaceID
             LEFT JOIN Bookings b ON s.SpaceID = b.SpaceID
             LEFT JOIN Reviews r ON b.BookingID = r.BookingID
+
             WHERE s.SpaceID = ?
-            GROUP BY 
-                s.SpaceID, s.ProviderID, s.Title, s.Description, s.SpaceType,
-                s.Size, s.Height, s.Width, s.Length,
-                s.PricePerMonth, s.PricePerWeek, s.PricePerDay,
-                s.MinRentalPeriod, s.MaxRentalPeriod, s.FloorNumber,
-                s.IsAvailable, s.FavoriteCount, s.Status,
-                p.ProviderID, p.FirstName, p.LastName, p.PhoneNumber, p.Email
+
+            GROUP BY
+                s.SpaceID,
+                s.Title,
+                s.Description,
+                s.SpaceType,
+                s.Size,
+                s.PricePerMonth,
+                s.PricePerWeek,
+                s.PricePerDay,
+                s.IsAvailable,
+                s.Status,
+                s.FavoriteCount,
+
+                f.FeatureID,
+                f.Temperature,
+                f.Humidity,
+                f.ClimateControlled,
+                f.SecuritySystem,
+                f.CCTVMonitored,
+                f.AccessType,
+                f.ParkingAvailable,
+                f.LoadingAssistance,
+                f.Restrictions,
+
+                p.ProviderID,
+                p.FirstName,
+                p.LastName,
+                p.PhoneNumber,
+                p.Email
         """, (space_id,))
         
         columns = [column[0] for column in cursor.description]
@@ -254,12 +310,27 @@ def get_space(space_id):
             return jsonify({'error': 'Space not found'}), 404
         
         space = dict(zip(columns, row))
-        
-        # Map to expected format
-        space['SizeInSqMeters'] = space.get('Size', 0)
+
+        # Convenience mappings for frontend
+
+        # City is not in this table yet, so default to Jeddah unless you add a Locations table
         space['City'] = 'Jeddah'
+
+        # Availability flag
         space['AvailabilityStatus'] = 'Available' if space.get('IsAvailable') else 'Unavailable'
-        
+
+        # Older keys used on frontend
+        space['ClimateControl'] = bool(space.get('ClimateControlled'))
+        space['SecurityCameras'] = bool(space.get('CCTVMonitored'))
+
+        # 24/7 access derived from AccessType text (e.g. "24/7 access")
+        access_type = (space.get('AccessType') or '').lower()
+        space['Access24_7'] = ('24' in access_type)
+
+        # Keep booleans explicit (JS will treat 0/1 as false/true-ish anyway)
+        space['ParkingAvailableFlag'] = bool(space.get('ParkingAvailable'))
+        space['LoadingAssistanceFlag'] = bool(space.get('LoadingAssistance'))
+
         conn.close()
         
         return jsonify({
@@ -277,65 +348,106 @@ def get_space(space_id):
 
 @app.route('/api/bookings', methods=['POST'])
 def create_booking():
-    """Create a new booking"""
+    """Create a new booking using your real Bookings schema"""
     try:
-        data = request.json
-        seeker_id = data.get('seekerId')
-        space_id = data.get('spaceId')
-        start_date = data.get('startDate')
-        end_date = data.get('endDate')
-        total_amount = data.get('totalAmount')
-        
+        data = request.json or {}
+
+        seeker_id   = data.get('seekerId')
+        space_id    = data.get('spaceId')
+        start_date  = data.get('startDate')   # "YYYY-MM-DD"
+        end_date    = data.get('endDate')     # "YYYY-MM-DD"
+        total_amount = data.get('totalAmount')  # already includes tax/fees from frontend
+
         if not all([seeker_id, space_id, start_date, end_date]):
             return jsonify({'error': 'Missing required fields'}), 400
-        
+
+        # Convert to proper types
+        start_dt = datetime.fromisoformat(start_date)
+        end_dt   = datetime.fromisoformat(end_date)
+
+        if end_dt < start_dt:
+            return jsonify({'error': 'End date must be after start date'}), 400
+
+        # Duration (approx months, you can tweak the formula later)
+        diff_days = (end_dt - start_dt).days or 1
+        rental_months = Decimal(str(diff_days / 30))  # e.g. 0.5, 1.0, etc.
+
+        # TotalAmount & PlatformFee as DECIMAL
+        total_dec = Decimal(str(total_amount)) if total_amount is not None else Decimal('0')
+        # For now: platform fee = 7% of total (change if you want)
+        platform_fee = (total_dec * Decimal('0.07')).quantize(Decimal('0.01'))
+
         conn = get_db_connection()
         cursor = conn.cursor()
-        
-        # Check if space is available
+
+        # Make sure the space exists & is available (optional, like you had before)
         cursor.execute("""
-            SELECT IsAvailable, PricePerMonth, Status
+            SELECT IsAvailable, Status
             FROM StorageSpaces
             WHERE SpaceID = ?
         """, (space_id,))
-        
-        space = cursor.fetchone()
-        if not space:
+        row = cursor.fetchone()
+        if not row:
             conn.close()
             return jsonify({'error': 'Space not found'}), 404
-        
-        if not space[0] or space[2] != 'Active':
+        if not row[0] or row[1] != 'Active':
             conn.close()
             return jsonify({'error': 'Space is not available'}), 400
-        
-        # Create booking
+
+        # Insert using YOUR real columns
         cursor.execute("""
-            INSERT INTO Bookings (SeekerID, SpaceID, StartDate, EndDate, BookingStatus, TotalAmount, BookingDate)
-            OUTPUT INSERTED.BookingID, INSERTED.StartDate, INSERTED.EndDate, INSERTED.TotalAmount, INSERTED.BookingStatus
-            VALUES (?, ?, ?, ?, 'Pending', ?, GETDATE())
-        """, (seeker_id, space_id, start_date, end_date, total_amount))
-        
-        row = cursor.fetchone()
-        booking = {
-            'bookingId': row[0],
-            'startDate': row[1].isoformat() if row[1] else None,
-            'endDate': row[2].isoformat() if row[2] else None,
-            'totalAmount': float(row[3]) if row[3] else 0,
-            'bookingStatus': row[4]
-        }
-        
+            INSERT INTO Bookings (
+                SpaceID,
+                SeekerID,
+                StartDate,
+                EndDate,
+                RentalDurationMonths,
+                TotalAmount,
+                PlatformFee,
+                BookingStatus,
+                CreatedAt
+            )
+            OUTPUT
+                INSERTED.BookingID,
+                INSERTED.StartDate,
+                INSERTED.EndDate,
+                INSERTED.TotalAmount,
+                INSERTED.BookingStatus
+            VALUES (
+                ?, ?, ?, ?, ?, ?, ?, 'Pending', SYSDATETIME()
+            )
+        """, (
+            int(space_id),
+            int(seeker_id),
+            start_dt,
+            end_dt,
+            rental_months,
+            total_dec,
+            platform_fee
+        ))
+
+        inserted = cursor.fetchone()
         conn.commit()
         conn.close()
-        
+
+        booking = {
+            'bookingId': int(inserted[0]),
+            'startDate': inserted[1].isoformat() if inserted[1] else None,
+            'endDate':   inserted[2].isoformat() if inserted[2] else None,
+            'totalAmount': float(inserted[3]) if inserted[3] is not None else 0,
+            'bookingStatus': inserted[4]
+        }
+
         return jsonify({
             'success': True,
             'message': 'Booking created successfully',
             'booking': booking
         }), 201
-        
+
     except Exception as e:
-        print(f"Booking creation error: {e}")
-        return jsonify({'error': 'Server error creating booking'}), 500
+        # Show full error in console AND send message to frontend for debugging
+        traceback.print_exc()
+        return jsonify({'error': f'Server error creating booking: {str(e)}'}), 500
 
 # =============================================
 # HEALTH CHECK

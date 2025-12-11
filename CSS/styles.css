@@ -2220,20 +2220,30 @@ body {
     align-items: start;
 }
 
-/* Payment Form Section */
+/* === LAYOUT: FORM + SUMMARY SIDE BY SIDE === */
+.payment-container {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+}
+
+/* Left side (form) */
 .payment-form-section {
     display: flex;
     flex-direction: column;
     gap: 30px;
+    flex: 1;
+    max-width: 430px;
 }
 
 .payment-title {
-    font-size: 48px;
+    font-size: 32px;
     font-weight: 800;
     color: #1a365d;
     margin-bottom: 0;
 }
 
+/* Form */
 .payment-form {
     display: flex;
     flex-direction: column;
@@ -2270,21 +2280,17 @@ body {
     line-height: 1;
 }
 
+/* Inputs */
 .payment-input {
     padding: 14px 16px;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     font-size: 16px;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
     background-color: #ffffff;
     color: #1a365d;
     font-family: 'Baloo Bhaijaan 2', sans-serif;
-}
-
-.payment-input:focus {
-    border-color: #ff6b35;
-    box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.2);
 }
 
 .payment-input::placeholder {
@@ -2292,15 +2298,28 @@ body {
     opacity: 0.7;
 }
 
-.payment-input:focus::placeholder {
-    opacity: 0;
-    transition: opacity 0.2s;
+.payment-input:focus {
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.2);
+    background-color: #ffffff;
 }
 
+
+
+
+/* CCV & Expiry in one row (2 columns) */
+.payment-row-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* If you use a masked CCV style */
 .payment-input.masked {
     letter-spacing: 2px;
 }
 
+/* Error states */
 .payment-input.error {
     border-color: #e63946;
     background-color: #fff5f5;
@@ -2311,40 +2330,85 @@ body {
     box-shadow: 0 0 0 1px rgba(230, 57, 70, 0.2);
 }
 
+/* Button */
 .complete-payment-btn {
     margin-top: 10px;
     padding: 16px 32px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     background-color: #ff6b35;
     color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.2s;
     font-family: 'Baloo Bhaijaan 2', sans-serif;
+    width: 100%;              /* full width like the mockup */
 }
 
 .complete-payment-btn:hover {
     background-color: #e55a2b;
+    box-shadow: 0 8px 18px rgba(255, 107, 53, 0.25);
 }
 
-/* Payment Summary Card */
+/* === PAYMENT SUMMARY CARD (Right side) === */
 .payment-summary-card {
+    flex: 1;
+    max-width: 620px;
     background-color: #ffffff;
     border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 100px;
+    padding: 32px 28px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+    position: relative;
+    overflow: visible;
 }
 
-.riyal-symbol-img{
+/* Orange tab at top */
+.payment-summary-card::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 10px;
+    border-radius: 999px 999px 0 0;
+    background-color: #ff6b35;
+}
+
+/* Ticket side notches */
+.payment-summary-card::after {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 58%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 10px #f7fafc;
+    background-color: #ffffff;
+}
+.payment-summary-card .ticket-notch-right {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 58%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 10px #f7fafc;
+    background-color: #ffffff;
+}
+
+/* Riyal symbol inside values */
+.riyal-symbol-img {
     width: 12px;
     margin-right: 5px;
 }
+
+/* Title */
 .payment-summary-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     color: #1a365d;
     margin-bottom: 8px;
@@ -2362,19 +2426,23 @@ body {
     background-color: #ff6b35;
 }
 
+/* Items */
 .payment-summary-items {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     margin-top: 24px;
     margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f7fafc;
 }
 
 .payment-summary-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 16px;
+    font-size: 14px;
     color: #4a5568;
 }
 
@@ -2387,12 +2455,14 @@ body {
     color: #1a365d;
 }
 
+/* Dashed separator like ticket cut */
 .payment-summary-divider {
     border: none;
     border-top: 2px dashed #cbd5e0;
-    margin: 24px 0;
+    margin: 24px -28px 24px; /* stretch full width */
 }
 
+/* Total section */
 .payment-summary-total {
     display: flex;
     justify-content: space-between;
@@ -2401,37 +2471,49 @@ body {
 }
 
 .payment-summary-total-label {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1a365d;
-}
-
-.payment-summary-total-value {
-    font-size: 28px;
-    font-weight: 800;
-    color: #1a365d;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a5568;
 }
 
 .payment-summary-total-wrapper {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
+.payment-summary-total-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a365d;
+}
+
+/* Small receipt icon container */
 .receipt-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     background-color: #f7fafc;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #4a5568;
-    font-size: 18px;
 }
 
-.receipt-icon img{
+.receipt-icon img {
     width: 20px;
+}
+
+/* Responsive tweak */
+@media (max-width: 900px) {
+    .payment-container {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .payment-summary-card {
+        position: static;
+        max-width: 100%;
+    }
 }
 
 /* Footer Styles for Payment Page */
@@ -3194,3 +3276,16 @@ body {
    Rating / Reviews Page
    ======================= */
 
+.booking-dates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* 2 equal columns */
+    gap: 20px;                      /* space between columns */
+    width: 100%;
+    align-items: center;
+}
+
+@media (max-width: 600px) {
+    .booking-dates-grid {
+        grid-template-columns: 1fr; /* stack vertically */
+    }
+}
