@@ -9,7 +9,7 @@ import hashlib
 from datetime import datetime
 from decimal import Decimal
 import traceback
-
+import uuid
 app = Flask(__name__)
 CORS(app)
 
@@ -348,39 +348,43 @@ def get_space(space_id):
 
 @app.route('/api/bookings', methods=['POST'])
 def create_booking():
-    """Create a new booking using your real Bookings schema"""
+    """Create a new booking and a payment record using your real schema"""
     try:
         data = request.json or {}
 
-        seeker_id   = data.get('seekerId')
-        space_id    = data.get('spaceId')
-        start_date  = data.get('startDate')   # "YYYY-MM-DD"
-        end_date    = data.get('endDate')     # "YYYY-MM-DD"
+        seeker_id    = data.get('seekerId')
+        space_id     = data.get('spaceId')
+        start_date   = data.get('startDate')   # "YYYY-MM-DD"
+        end_date     = data.get('endDate')     # "YYYY-MM-DD"
         total_amount = data.get('totalAmount')  # already includes tax/fees from frontend
 
+        # Basic validation
         if not all([seeker_id, space_id, start_date, end_date]):
-            return jsonify({'error': 'Missing required fields'}), 400
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+
+        if total_amount is None:
+            return jsonify({'success': False, 'error': 'totalAmount is required'}), 400
 
         # Convert to proper types
         start_dt = datetime.fromisoformat(start_date)
         end_dt   = datetime.fromisoformat(end_date)
 
         if end_dt < start_dt:
-            return jsonify({'error': 'End date must be after start date'}), 400
+            return jsonify({'success': False, 'error': 'End date must be after start date'}), 400
 
-        # Duration (approx months, you can tweak the formula later)
         diff_days = (end_dt - start_dt).days or 1
-        rental_months = Decimal(str(diff_days / 30))  # e.g. 0.5, 1.0, etc.
+        # Duration in months (approx)
+        rental_months = (Decimal(diff_days) / Decimal(30)).quantize(Decimal('0.01'))
 
         # TotalAmount & PlatformFee as DECIMAL
-        total_dec = Decimal(str(total_amount)) if total_amount is not None else Decimal('0')
-        # For now: platform fee = 7% of total (change if you want)
+        total_dec = Decimal(str(total_amount))
+        # Example: platform fee = 7% of total
         platform_fee = (total_dec * Decimal('0.07')).quantize(Decimal('0.01'))
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Make sure the space exists & is available (optional, like you had before)
+        # Make sure the space exists & is available
         cursor.execute("""
             SELECT IsAvailable, Status
             FROM StorageSpaces
@@ -389,12 +393,12 @@ def create_booking():
         row = cursor.fetchone()
         if not row:
             conn.close()
-            return jsonify({'error': 'Space not found'}), 404
+            return jsonify({'success': False, 'error': 'Space not found'}), 404
         if not row[0] or row[1] != 'Active':
             conn.close()
-            return jsonify({'error': 'Space is not available'}), 400
+            return jsonify({'success': False, 'error': 'Space is not available'}), 400
 
-        # Insert using YOUR real columns
+        # 1) INSERT into Bookings and get the inserted row via OUTPUT
         cursor.execute("""
             INSERT INTO Bookings (
                 SpaceID,
@@ -426,28 +430,79 @@ def create_booking():
             platform_fee
         ))
 
-        inserted = cursor.fetchone()
+        booking_row = cursor.fetchone()
+        if not booking_row:
+            conn.rollback()
+            conn.close()
+            return jsonify({'success': False, 'error': 'Could not create booking'}), 500
+
+        booking_id      = booking_row[0]
+        inserted_start  = booking_row[1]
+        inserted_end    = booking_row[2]
+        inserted_total  = booking_row[3]
+        inserted_status = booking_row[4]
+
+        # 2) INSERT into Payments with that BookingID
+        transaction_id = str(uuid.uuid4())  # fake transaction ID for now
+
+        cursor.execute("""
+            INSERT INTO Payments (
+                BookingID,
+                PaymentType,
+                Amount,
+                Currency,
+                PaymentMethod,
+                PaymentStatus,
+                TransactionID,
+                PaymentGateway,
+                PaymentDate,
+                RefundAmount,
+                RefundDate,
+                RefundReason,
+                CreatedAt
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, SYSDATETIME(), NULL, NULL, NULL, SYSDATETIME())
+        """, (
+            int(booking_id),     # BookingID
+            'Booking',           # PaymentType
+            total_dec,           # Amount (DECIMAL)
+            'SAR',               # Currency
+            'CreditCard',              # PaymentMethod
+            'Completed',         # PaymentStatus
+            transaction_id,      # TransactionID
+            'Manual'             # PaymentGateway (or 'Moyasar', 'Stripe', etc.)
+        ))
+
+        # 3) Commit both inserts
         conn.commit()
         conn.close()
 
         booking = {
-            'bookingId': int(inserted[0]),
-            'startDate': inserted[1].isoformat() if inserted[1] else None,
-            'endDate':   inserted[2].isoformat() if inserted[2] else None,
-            'totalAmount': float(inserted[3]) if inserted[3] is not None else 0,
-            'bookingStatus': inserted[4]
+            'bookingId': int(booking_id),
+            'startDate': inserted_start.isoformat() if inserted_start else None,
+            'endDate':   inserted_end.isoformat() if inserted_end else None,
+            'totalAmount': float(inserted_total) if inserted_total is not None else 0,
+            'bookingStatus': inserted_status
+        }
+
+        payment = {
+            'bookingId': int(booking_id),
+            'amount': float(total_dec),
+            'currency': 'SAR',
+            'paymentStatus': 'Completed',
+            'transactionId': transaction_id
         }
 
         return jsonify({
             'success': True,
-            'message': 'Booking created successfully',
-            'booking': booking
+            'message': 'Booking and payment created successfully',
+            'booking': booking,
+            'payment': payment
         }), 201
 
     except Exception as e:
-        # Show full error in console AND send message to frontend for debugging
         traceback.print_exc()
-        return jsonify({'error': f'Server error creating booking: {str(e)}'}), 500
+        return jsonify({'success': False, 'error': f'Server error creating booking: {str(e)}'}), 500
 
 # =============================================
 # HEALTH CHECK
